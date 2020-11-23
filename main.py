@@ -39,7 +39,6 @@ def showAttendResult():
 
 if __name__ =='__main__':
     args = parser.parse_args()
-
     if args.local:
         # localhost
         app.run(port=args.port)
