@@ -1,5 +1,12 @@
+import argparse
+
 from flask import Flask, render_template, request
 from engine import controlled_inpaint
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--port', default=5000, type=int, help='port number')
+parser.add_argument('--local', action='store_true', help='run in local')
+#parser.add_argument('--use_gpus', action='store_true', help='use gpus')
  
 app = Flask(__name__)
  
@@ -25,11 +32,17 @@ def showAttendResult():
     mask_file=request.files['mask']
     att_file=request.files['att']
     output = controlled_inpaint(image_path='deepfillv1/examples/places2/sunset_input.png',
-                            mask_path='deepfillv1/examples/places2/sunset_mask.png',
-                            att_path='./output_att.png',
-                            out_image_path='./output_controlled.png')
+                                mask_path='deepfillv1/examples/places2/sunset_mask.png',
+                                att_path='./output_att.png',
+                                out_image_path='./output_controlled.png')
     return render_template("pages/Upload.html")
 
 if __name__ =='__main__':
-    # app.run() # localhost
-    app.run(host='0.0.0.0', port='5000') # to run in a docker container
+    args = parser.parse_args()
+
+    if args.local:
+        # localhost
+        app.run(port=args.port)
+    else:
+        # deploy
+        app.run(host='0.0.0.0', port=args.port)
