@@ -5,7 +5,7 @@ app = Flask(__name__)
  
 @app.route('/')
 def index():
-  return render_template("index.html")
+    return render_template("index.html")
  
 @app.route('/pages/Upload.html')
 def Upload():
@@ -21,12 +21,14 @@ def Step3Comp():
 
 @app.route('/Result', methods=['POST'])
 def showAttendResult():
-    img_file=request.files['image']
-    mask_file=request.files['mask']
-    att_file=request.files['att']
-    output = controlled_inpaint(image_path='deepfillv1/examples/places2/sunset_input.png',
-                            mask_path='deepfillv1/examples/places2/sunset_mask.png',
-                            att_path='./output_att.png',
+    print(request.data)
+    img_file=request.json['image']
+    mask_file=request.json['mask']
+    att_file=request.json['att']
+    print("img_loaded")
+    output = controlled_inpaint(image_path=img_file,
+                            mask_path=mask_file,
+                            att_path=att_file,
                             out_image_path='./output_controlled.png')
     return render_template("pages/Upload.html")
 

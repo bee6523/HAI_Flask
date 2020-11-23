@@ -56,14 +56,6 @@ function startAttending(){
   tool="picker";
 }
 
-function submitImages(){
-  submit_img=document.getElementById("submit_image");
-  submit_mask=document.getElementById("submit_mask");
-  submit_att=document.getElementById("submit_att");
-  submit_img.src=image.src;
-  submit_mask.src=mask;
-  submit_att.src=convertToAttImage();
-}
 function downloadMasks(el){
   el.href=mask;
 }
@@ -71,17 +63,18 @@ function downloadAttention(el){
   el.href=convertToAttImage();
 }
 
-// function showResult(){
-//   attention=convertToAttImage();
-//   function postData(input) {
-//     $.ajax({
-//         type: "POST",
-//         url: "/reverse_pca.py",
-//         data: { param: input },
-//         success: callbackFunc
-//     });
-//   }
-// }
+function showResult(){
+  console.log(image.src);
+  attention=convertToAttImage();
+  $.ajax({
+      type: "POST",
+      url: "/Result",
+      data: { img: window.URL.createObjectURL(image_file), mask: mask, att:attention },
+      dataType: 'JSON',
+      success: callbackFunc
+  });
+  console.log("send!!");
+}
 function callbackFunc(response){
   console.log(response);
 }
@@ -192,7 +185,6 @@ function pickicker() {
   document.getElementById("brushBtn").disabled=false;
 }
 function fillill() {
-  console.log("!!");
   tool="fill";
   document.getElementById("pickerBtn").disabled=false;
   document.getElementById("fillBtn").disabled=true;
