@@ -31,4 +31,5 @@ def showAttendResult():
     return render_template("pages/Upload.html")
 
 if __name__ =='__main__':
-    app.run()
+    # app.run() # localhost
+    app.run(host='0.0.0.0', port='5000') # to run in a docker container
