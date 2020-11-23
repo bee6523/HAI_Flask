@@ -20,6 +20,11 @@ var app = Sammy(function () {
         $("#toolBox").load("./pages/Step3Components.html");
     });
 
+    this.get("#/step4", function () {
+        startAttending();
+        $("#mainDiv").load("/AttendResult");
+    });
+
 
     this.get("#/param/:id", function () {
         //파라미터 받기

@@ -18,5 +18,9 @@ def Step2Comp():
 def Step3Comp():
     return render_template("/pages/Step3Components.html")
 
+@app.route('/AttendResult')
+def showAttendResult():
+    
+
 if __name__ =='__main__':
     app.run()
