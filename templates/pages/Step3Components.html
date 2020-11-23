@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="{{url_for('static', filename = 'css/Upload.css')}}" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="attendingGadgets">
+      <li><button id="pickerBtn" onClick="pickicker()"><i class="fas fa-eye-dropper"></i></button></li>
+      <li><button id="fillBtn" onClick="fillill()"><i class="fas fa-fill"></i></button></li>
+      <li><button id="brushBtn" onClick="brushrush_3()"><i class="fas fa-paint-brush"></i></button></li>
+    </div>
+    <div id="imgContainer">
+      <img id="colorpalette" src="{{url_for('static', filename = 'img/colorpalette.png')}}" width="110" height="80">
+    </div>
+  <script type="text/javascript" src="{{url_for('static', filename = 'js/processor.js')}}"></script>
+  </body>
+</html>

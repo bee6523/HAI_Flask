@@ -1,0 +1,26 @@
+#canvasDiv{
+    width: 550px;
+    height: 400px;
+    position: relative;
+}
+canvas {position: absolute; left: 0; right:0;}
+#img_layer{ z-index: 0;}
+#canvas_layer{ z-index: 1; }
+#tmp_layer{ z-index: 2; }
+
+#maskingGadgets {
+    list-style-type: none;
+}
+#attendingGadgets {
+    list-style-type: none;
+}
+#imgContainer {margin-top: 200px;}
+button {
+	font-family: 'Quicksand';
+    font-size: 1.2em;
+    padding: 5px 8px 5px 8px;
+    margin: 2px;
+    border: 2px solid gray;
+    border-radius: 8px;
+    background-color: white;
+}

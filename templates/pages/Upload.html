@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="{{url_for('static', filename = 'css/Upload.css')}}" rel="stylesheet">
+  </head>
+  <body>
+    <div id="canvasDiv">
+      <canvas id="img_layer" width="550" height="400"></canvas>
+      <canvas id="canvas_layer" width="550" height="400"></canvas>
+      <canvas id="tmp_layer" width="550" height="400"></canvas>
+    </div>
+    <div>
+      <input type="file" name="file" id="userUploadedImage" accept="image/*">
+      <a id="downloadM" download="maskImage.png" href="" onclick="downloadMasks(this);">download mask image</a>
+      <a id="downloadA" download="attendImage.png" href="" onclick="downloadAttention(this);">download attention image</a>
+    </div>
+    <br><br>
+    <button id="prevBtn" hidden onClick=''>Previous step</button>
+    <button id="nextBtn" hidden onClick=next()>Next step</button>
+    <button onClick=toggleBackground()>convert</button>
+  <script type="text/javascript" src="{{url_for('static', filename = 'js/processor.js')}}"></script>
+  </body>
+</html>

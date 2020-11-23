@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/index.css') }}" rel="stylesheet">
+    <title>Attention!</title>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="{{ url_for('static', filename='js/lib/sammy.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/router.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+  </head>
+  <body>
+    <div style = "width:100%">
+        <ol class="progress">
+            <li class="is-active" data-step="1">
+              Step 1
+            </li>
+            <li data-step="2">
+              Step 2
+            </li>
+            <li data-step="3">
+              Step 3
+            </li>
+            <li data-step="4" class="progress__last">
+              Step 4  
+            </li>
+        </ol>
+        <div class="container">
+          <div id="mainDiv">
+              <!--내용-->
+          </div>
+          <div id="toolBox">
+              <!--gadgets-->
+          </div>
+        </div>
+    </div>
+  </body>
+</html> 
