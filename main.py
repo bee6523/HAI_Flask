@@ -46,6 +46,7 @@ def showAttendResult():
     img_path="./engine/input_image.png"
     mask_path="./engine/input_mask.png"
     att_path="./engine/input_att.png"
+    ret_path="./static/img/ret.png"
     cv2.imwrite(img_path,image)
     cv2.imwrite(mask_path,mask)
     cv2.imwrite(att_path,att)
@@ -55,8 +56,10 @@ def showAttendResult():
                             mask_path=mask_path,
                             att_path=att_path,
                             out_image_path='./output_controlled.png')
+    cv2.imwrite(ret_path,output)
+    # cv2.imwrite(ret_path,image)
 
-    return render_template("pages/Upload.html")
+    return ret_path
 
 if __name__ =='__main__':
     args = parser.parse_args()

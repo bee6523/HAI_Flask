@@ -3,6 +3,7 @@ var image_file, image, colorMap,
   img_layer, img_ctx,
   cnv_layer, cnv_ctx,
   tmp_layer,tmp_ctx,
+  result_layer,
   prevX,prevY,
   currX,currY,
   attendX,attendY;
@@ -16,6 +17,7 @@ let processor = {
       img_layer = document.getElementById("img_layer");
       cnv_layer = document.getElementById("canvas_layer");
       tmp_layer=document.getElementById("tmp_layer");
+      result_layer=document.getElementById("result_layer");
       img_ctx = img_layer.getContext("2d");
       cnv_ctx = cnv_layer.getContext("2d");
       tmp_ctx=tmp_layer.getContext("2d");
@@ -35,8 +37,8 @@ let processor = {
               img_width=550;
               img_height=parseInt(550*ratio);
             }
-            img_layer.width=cnv_layer.width=tmp_layer.width=img_width;
-            img_layer.height=cnv_layer.height=tmp_layer.height=img_height;
+            img_layer.width=cnv_layer.width=tmp_layer.width=result_layer.width=img_width;
+            img_layer.height=cnv_layer.height=tmp_layer.height=result_layer.height=img_height;
             img_ctx.drawImage(image,0,0,img_width,img_height);
           });
           image.src=window.URL.createObjectURL(image_file);
@@ -46,12 +48,14 @@ let processor = {
   };
 
 function startDrawing(){
+  document.getElementById("result_layer").style.visibility="hidden";
   tmp_layer.addEventListener("mousemove",doDraw);
   tmp_layer.addEventListener("mousedown",initDraw);
   tmp_layer.addEventListener("mouseup",endDraw);
   tmp_layer.addEventListener("mouseout",endDraw);
 }
 function startAttending(){
+  document.getElementById("result_layer").style.visibility="hidden";
   mask=convertToBinaryMap();
   tool="picker";
 }
@@ -84,6 +88,13 @@ function showResult(){
 }
 function callbackFunc(response){
   console.log(response);
+  var result_image = new Image();
+  result_image.addEventListener("load",(evt)=>{
+    res_ctx=result_layer.getContext("2d");
+    res_ctx.drawImage(result_image,0,0,img_width,img_height);
+    document.getElementById("result_layer").style.visibility="visible";
+  });
+  result_image.src=response;
 }
 
 function convertToBinaryMap(){
@@ -102,7 +113,8 @@ function convertToAttImage(){
   var ctx=canvas.getContext("2d");
   canvas.width=img_width;
   canvas.height=img_height;
-
+  ctx.fillStyle="white";
+  ctx.fillRect(0,0,img_width,img_height);
   ctx.drawImage(cnv_layer,0,0);
 
   return canvas.toDataURL("image/png");
