@@ -1,4 +1,5 @@
 import argparse
+import base64
 
 from flask import Flask, render_template, request
 from engine import controlled_inpaint
@@ -28,10 +29,11 @@ def Step3Comp():
 
 @app.route('/Result', methods=['POST'])
 def showAttendResult():
-    print(request.data)
-    img_file=request.json['image']
-    mask_file=request.json['mask']
-    att_file=request.json['att']
+    #base64 image string?
+    img_file=request.form['img']
+    mask_file=request.form['mask']
+    att_file=request.form['att']
+    print(base64.b64decode(mask_file))
     print("img_loaded")
     output = controlled_inpaint(image_path=img_file,
                             mask_path=mask_file,

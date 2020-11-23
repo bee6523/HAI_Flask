@@ -66,11 +66,18 @@ function downloadAttention(el){
 function showResult(){
   console.log(image.src);
   attention=convertToAttImage();
+  formData = new FormData();
+  formData.append("img",img_layer.toDataURL("image/png"));
+  formData.append("mask",mask);
+  formData.append("att",attention);
   $.ajax({
       type: "POST",
       url: "/Result",
-      data: { img: window.URL.createObjectURL(image_file), mask: mask, att:attention },
-      dataType: 'JSON',
+      data: formData,
+      contentType: false,
+      processData: false,
+      cache: false,
+      async: false,
       success: callbackFunc
   });
   console.log("send!!");
