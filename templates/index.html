@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand" rel="stylesheet">
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" />
     <link href="{{ url_for('static', filename='css/index.css') }}" rel="stylesheet">
     <title>Attention!</title>
 
@@ -14,6 +15,7 @@
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
   </head>
   <body>
+    <div><image src="{{url_for('static', filename = 'img/logo.png')}}" width="800px" style ="color:#6b4600"></image></div>
     <div style = "width:100%">
         <ol class="progress">
             <li class="is-active" data-step="1">
