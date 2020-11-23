@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
-tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)  # will suppress all warnings
-from deepfillv1.inpaint_ops import flow_to_image_tf
+#tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)  # will suppress all warnings
+from .deepfillv1.inpaint_ops import flow_to_image_tf
 from neuralgym.ops.layers import resize
 
 

@@ -1,16 +1,13 @@
 import os
-
 from matplotlib import pyplot as plt
 import cv2
-
 import numpy as np
 import tensorflow as tf
 #tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)  # will suppress all warnings
-
 import neuralgym as ng
-from deepfillv1.inpaint_model import InpaintCAModel
-from deepfillv1.inpaint_ops import flow_to_image_tf
-from utils import Namespace, get_colormap_image, reverse_map
+from .deepfillv1.inpaint_model import InpaintCAModel
+from .deepfillv1.inpaint_ops import flow_to_image_tf
+from .utils import Namespace, get_colormap_image, reverse_map
 
 
 #ng.get_gpus(1)

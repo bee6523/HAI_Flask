@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from engine.pipeline import controlled_inpaint
+from engine import controlled_inpaint
  
 app = Flask(__name__)
  
