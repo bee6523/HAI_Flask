@@ -4,12 +4,15 @@ var app = Sammy(function () {
  
     this.get("#/", function () {
         //인덱스 페이지
+        $("#prevBtn").hide();
+        $("#stepInfo").text("Step1: Upload your image");
         $("#mainDiv").load("/pages/Upload.html");
     });
  
     this.get("#/step2", function () {
         startDrawing();
         $("#userUploadedImage").hide();
+        $("#stepInfo").text("Step2: Mask your image");
         $("#prevBtn").show();
         $("#toolBox").load("./pages/Step2Components.html");
     });
@@ -17,7 +20,16 @@ var app = Sammy(function () {
     this.get("#/step3", function () {
         startAttending();
         $("#step2Components").hide();
+        $("#stepInfo").text("Step3: Set reference region");
+        $("#nextBtn").show();
         $("#toolBox").load("./pages/Step3Components.html");
+    });
+
+    this.get("#/step4", function () {
+        //do display
+        $("#stepInfo").text("Step4: See the result");
+        $("#step3Components").hide();
+        $("#nextBtn").hide();
     });
 
     this.get("#/param/:id", function () {
