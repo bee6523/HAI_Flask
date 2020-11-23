@@ -1,5 +1,12 @@
+import argparse
+
 from flask import Flask, render_template, request
 from engine import controlled_inpaint
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--port', default=5000, type=int, help='port number')
+parser.add_argument('--local', action='store_true', help='run in local')
+#parser.add_argument('--use_gpus', action='store_true', help='use gpus')
  
 app = Flask(__name__)
  
@@ -30,7 +37,14 @@ def showAttendResult():
                             mask_path=mask_file,
                             att_path=att_file,
                             out_image_path='./output_controlled.png')
+
     return render_template("pages/Upload.html")
 
 if __name__ =='__main__':
-    app.run()
+    args = parser.parse_args()
+    if args.local:
+        # localhost
+        app.run(port=args.port)
+    else:
+        # deploy
+        app.run(host='0.0.0.0', port=args.port)
