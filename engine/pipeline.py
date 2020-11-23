@@ -5,7 +5,7 @@ import cv2
 
 import numpy as np
 import tensorflow as tf
-tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)  # will suppress all warnings
+#tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)  # will suppress all warnings
 
 import neuralgym as ng
 from deepfillv1.inpaint_model import InpaintCAModel

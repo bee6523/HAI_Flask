@@ -17,6 +17,12 @@
     <br><br>
     <button id="prevBtn" hidden onClick=''>Previous step</button>
     <button id="nextBtn" hidden onClick=next()>Next step</button>
+    <form action="/Result" method='POST'>
+      <input type="image" id="submit_image" name="image" src="">
+      <input type="image" id="submit_mask" name="mask" src="">
+      <input type="image" id="submit_att" name="att" src="">
+      <input type="submit" onclick=submitImages() value="convert">
+    </form>
     <button onClick=toggleBackground()>convert</button>
   <script type="text/javascript" src="{{url_for('static', filename = 'js/processor.js')}}"></script>
   </body>

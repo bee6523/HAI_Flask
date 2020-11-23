@@ -1,4 +1,4 @@
-var image_file, iamge, colorMap,
+var image_file, image, colorMap,
   img_width,img_height,
   img_layer, img_ctx,
   cnv_layer, cnv_ctx,
@@ -56,6 +56,14 @@ function startAttending(){
   tool="picker";
 }
 
+function submitImages(){
+  submit_img=document.getElementById("submit_image");
+  submit_mask=document.getElementById("submit_mask");
+  submit_att=document.getElementById("submit_att");
+  submit_img.src=image.src;
+  submit_mask.src=mask;
+  submit_att.src=convertToAttImage();
+}
 function downloadMasks(el){
   el.href=mask;
 }
