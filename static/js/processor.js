@@ -45,29 +45,6 @@ let processor = {
     },
   };
 
-  function next() {
-    var step = $("li[class=is-active]");
-    step.removeClass("is-active");
-    step.addClass("is-complete");
-    const num = parseInt(step.attr('data-step'))+1;
-    console.log(num);
-    const data = num<4? String(num) : "4";
-    console.log(data);
-    step = $('li[data-step='+data+']');
-    console.log(step);
-    step.addClass("is-active");
-    window.location.href = '#/step'+data;
-  }
-  function prev() {
-    var step = $("li[class=is-active");
-    step.removeClass("is-active");
-    const num = parseInt(step.attr('data-step'))-1;
-    const data =  num !== 0 ? String(num) : "1";
-    step = $('li[data-step='+data+']');
-    step.removeClass("is-complete");
-    step.addClass("is-active");
-    window.location.href = '#/step'+data;
-  }
 function startDrawing(){
   tmp_layer.addEventListener("mousemove",doDraw);
   tmp_layer.addEventListener("mousedown",initDraw);

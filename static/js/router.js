@@ -5,6 +5,7 @@ var app = Sammy(function () {
     this.get("#/", function () {
         //인덱스 페이지
         $("#prevBtn").hide();
+        $("#restartBtn").hide();
         $("#stepInfo").text("Step1: Upload your image");
         $("#mainDiv").load("/pages/Upload.html");
     });
@@ -30,6 +31,8 @@ var app = Sammy(function () {
         $("#stepInfo").text("Step4: See the result");
         $("#step3Components").hide();
         $("#nextBtn").hide();
+        $("#prevBtn").hide();
+        $("#restartBtn").show();
     });
 
     this.get("#/param/:id", function () {
