@@ -32,4 +32,4 @@ def showAttendResult():
 
 if __name__ =='__main__':
     # app.run() # localhost
-    app.run(host='0.0.0.0', port='5000') # to run in a docker container
+    app.run(host='0.0.0.0', port='8888') # to run in a docker container
