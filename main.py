@@ -4,7 +4,7 @@ import numpy as np
 import cv2
 
 from flask import Flask, render_template, request
-from engine import controlled_inpaint
+from engine import inpaint, controlled_inpaint
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--port', default=5000, type=int, help='port number')
@@ -28,6 +28,20 @@ def Step2Comp():
 @app.route('/pages/Step3Components.html')
 def Step3Comp():
     return render_template("/pages/Step3Components.html")
+
+def example_function():
+    img_path="./engine/input_image.png"
+    mask_path="./engine/input_mask.png"
+
+    ret_path = "./engine/model_output_image.png"
+    ret_att_path = "./engine/input_att.png"
+
+    output, att = inpaint(image_path=img_path,
+                          mask_path=mask_path,
+                          out_image_path=ret_path,
+                          out_att_path=ret_att_path)
+    # no need to write output, inpaint already does this
+    return ret_path, ret_att_path
 
 @app.route('/Result', methods=['POST'])
 def showAttendResult():
@@ -55,8 +69,8 @@ def showAttendResult():
                                 mask_path=mask_path,
                                 att_path=att_path,
                                 out_image_path=ret_path)
-    cv2.imwrite(ret_path,output)
-    # cv2.imwrite(ret_path,image)
+    # no need to write output, controlled_inpaint already does this
+    # cv2.imwrite(ret_path,output)
 
     return ret_path
 
