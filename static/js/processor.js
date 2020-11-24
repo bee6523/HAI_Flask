@@ -1,4 +1,4 @@
-var image_file, image, colorMap,
+var image_file, image, colorMap, loadImage,
   img_width,img_height,
   img_layer, img_ctx,
   cnv_layer, cnv_ctx,
@@ -27,6 +27,8 @@ let processor = {
       att_ctx=att_layer.getContext("2d");
       colorMap = new Image();
       colorMap.src="/static/img/colorpalette.png";
+      loadImage = new Image();
+      loadImage.src="/static/img/loading.png";
       this.elImage = document.getElementById("userUploadedImage");
 
       this.elImage.addEventListener("change", (evt)=>{
@@ -62,6 +64,7 @@ function startDrawing(){
 }
 function startAttending(){
   document.getElementById("result_layer").style.visibility="hidden";
+  tmp_ctx.drawImage(loadImage,img_width/2-50,img_height/2-50,100,100);
   mask=convertToMask();
   formData = new FormData();
   formData.append("img",img_layer.toDataURL("image/png"));
@@ -73,7 +76,7 @@ function startAttending(){
       contentType: false,
       processData: false,
       cache: false,
-      async: false,
+      async: true,
       success: callback_getAttention
   });
   console.log("sent initial mask");
@@ -95,6 +98,10 @@ function showResult(){
   }else{
     showingResult=true;
     console.log(image.src);
+
+    //show loading image while processing
+    tmp_ctx.drawImage(loadImage,img_width/2-50,img_height/2-50,100,100);
+
     mask=convertToMask();
     attention=convertToAttImage();
     formData = new FormData();
@@ -108,7 +115,7 @@ function showResult(){
         contentType: false,
         processData: false,
         cache: false,
-        async: false,
+        async: true,
         success: callback_getResult
     });
     console.log("send!!");
@@ -123,6 +130,7 @@ function callback_getAttention(response){
     res_ctx=result_layer.getContext("2d");
     res_ctx.drawImage(result_image,0,0,img_width,img_height);
     document.getElementById("result_layer").style.visibility="visible";
+    tmp_ctx.clearRect(0,0,img_width,img_height);
     $('#convertBtn').html("Modulate");
   });
   att_tmp.addEventListener("load",(evt)=>{
@@ -144,6 +152,7 @@ function callback_getResult(response){
     res_ctx=result_layer.getContext("2d");
     res_ctx.drawImage(result_image,0,0,img_width,img_height);
     document.getElementById("result_layer").style.visibility="visible";
+    tmp_ctx.clearRect(0,0,img_width,img_height);
     $('#convertBtn').html("Modulate");
   });
   result_image.src=response;
