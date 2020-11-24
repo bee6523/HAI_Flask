@@ -64,7 +64,7 @@ function startDrawing(){
 }
 function startAttending(){
   document.getElementById("result_layer").style.visibility="hidden";
-  tmp_ctx.drawImage(loadImage,img_width/2-50,img_height/2-50,100,100);
+  //tmp_ctx.drawImage(loadImage,img_width/2-50,img_height/2-50,100,100);
   mask=convertToMask();
   formData = new FormData();
   formData.append("img",img_layer.toDataURL("image/png"));
@@ -100,7 +100,7 @@ function showResult(){
     console.log(image.src);
 
     //show loading image while processing
-    tmp_ctx.drawImage(loadImage,img_width/2-50,img_height/2-50,100,100);
+    //tmp_ctx.drawImage(loadImage,img_width/2-50,img_height/2-50,100,100);
 
     mask=convertToMask();
     attention=convertToAttImage();
@@ -141,8 +141,8 @@ function callback_getAttention(response){
     att_ctx.globalCompositeOperation="source-over";
   });
   paths=response.split('&');
-  result_image.src=paths[0]
-  att_tmp.src=paths[1]
+  result_image.src=paths[0]+ "?t=" + new Date().getTime();
+  att_tmp.src=paths[1]+ "?t="+ new Date().getTime();
 }
 
 function callback_getResult(response){
@@ -155,7 +155,7 @@ function callback_getResult(response){
     tmp_ctx.clearRect(0,0,img_width,img_height);
     $('#convertBtn').html("Modulate");
   });
-  result_image.src=response;
+  result_image.src=response + "?t=" + new Date().getTime();
 }
 
 function convertToMask(){
