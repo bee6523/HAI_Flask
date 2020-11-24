@@ -86,13 +86,6 @@ function startAttending(){
   tool="picker";
 }
 
-function downloadMasks(el){
-  el.href=mask;
-}
-function downloadAttention(el){
-  el.href=convertToAttImage();
-}
-
 function showResult(){
   if(showingResult){
     document.getElementById("result_layer").style.visibility="hidden";
