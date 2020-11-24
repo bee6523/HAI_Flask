@@ -29,6 +29,7 @@ var app = Sammy(function () {
     this.get("#/step4", function () {
         //do display
         $("#stepInfo").text("Step4: See the result");
+        $('#result_layer').css("visibility","visible");
         $("#step3Components").hide();
         $("#nextBtn").hide();
         $("#prevBtn").hide();
