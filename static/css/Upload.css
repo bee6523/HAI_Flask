@@ -6,8 +6,9 @@
 canvas {position: absolute; left: 0; right:0;}
 #img_layer{ z-index: 0;}
 #canvas_layer{ z-index: 1; }
-#tmp_layer{ z-index: 2; }
-#result_layer{ z-index: 3; }
+#att_layer{ z-index: 2; }
+#tmp_layer{ z-index: 3; }
+#result_layer{ z-index: 4; }
 
 #maskingGadgets {
     list-style-type: none;

@@ -2,11 +2,13 @@ var image_file, image, colorMap,
   img_width,img_height,
   img_layer, img_ctx,
   cnv_layer, cnv_ctx,
+  att_layer, att_ctx,
   tmp_layer,tmp_ctx,
   result_layer,
   prevX,prevY,
   currX,currY,
   attendX,attendY;
+var showingResult=true; //true if displaying result, false if modulating phase
 var mask, attention;
 var tool="rect";
 var lineWidth=5;
@@ -17,10 +19,12 @@ let processor = {
       img_layer = document.getElementById("img_layer");
       cnv_layer = document.getElementById("canvas_layer");
       tmp_layer=document.getElementById("tmp_layer");
+      att_layer=document.getElementById("att_layer");
       result_layer=document.getElementById("result_layer");
       img_ctx = img_layer.getContext("2d");
       cnv_ctx = cnv_layer.getContext("2d");
       tmp_ctx=tmp_layer.getContext("2d");
+      att_ctx=att_layer.getContext("2d");
       colorMap = new Image();
       colorMap.src="/static/img/colorpalette.png";
       this.elImage = document.getElementById("userUploadedImage");
@@ -49,6 +53,8 @@ let processor = {
 
 function startDrawing(){
   document.getElementById("result_layer").style.visibility="hidden";
+  tmp_ctx.clearRect(0,0,img_width,img_height);
+  att_ctx.clearRect(0,0,img_width,img_height);
   tmp_layer.addEventListener("mousemove",doDraw);
   tmp_layer.addEventListener("mousedown",initDraw);
   tmp_layer.addEventListener("mouseup",endDraw);
@@ -56,7 +62,21 @@ function startDrawing(){
 }
 function startAttending(){
   document.getElementById("result_layer").style.visibility="hidden";
-  mask=convertToBinaryMap();
+  mask=convertToMask();
+  formData = new FormData();
+  formData.append("img",img_layer.toDataURL("image/png"));
+  formData.append("mask",mask);
+  $.ajax({
+      type: "POST",
+      url: "/InitResult",
+      data: formData,
+      contentType: false,
+      processData: false,
+      cache: false,
+      async: false,
+      success: callback_getAttention
+  });
+  console.log("sent initial mask");
   tool="picker";
 }
 
@@ -68,36 +88,68 @@ function downloadAttention(el){
 }
 
 function showResult(){
-  console.log(image.src);
-  attention=convertToAttImage();
-  formData = new FormData();
-  formData.append("img",img_layer.toDataURL("image/png"));
-  formData.append("mask",mask);
-  formData.append("att",attention);
-  $.ajax({
-      type: "POST",
-      url: "/Result",
-      data: formData,
-      contentType: false,
-      processData: false,
-      cache: false,
-      async: false,
-      success: callbackFunc
-  });
-  console.log("send!!");
+  if(showingResult){
+    document.getElementById("result_layer").style.visibility="hidden";
+    $('#convertBtn').html("Convert");
+    showingResult=false;
+  }else{
+    showingResult=true;
+    console.log(image.src);
+    mask=convertToMask();
+    attention=convertToAttImage();
+    formData = new FormData();
+    formData.append("img",img_layer.toDataURL("image/png"));
+    formData.append("mask",mask);
+    formData.append("att",attention);
+    $.ajax({
+        type: "POST",
+        url: "/Result",
+        data: formData,
+        contentType: false,
+        processData: false,
+        cache: false,
+        async: false,
+        success: callback_getResult
+    });
+    console.log("send!!");
+  }
 }
-function callbackFunc(response){
+function callback_getAttention(response){
+  console.log("success!")
+  console.log(response);
+  var att_tmp=new Image();
+  var result_image= new Image();
+  result_image.addEventListener("load",(evt)=>{
+    res_ctx=result_layer.getContext("2d");
+    res_ctx.drawImage(result_image,0,0,img_width,img_height);
+    document.getElementById("result_layer").style.visibility="visible";
+    $('#convertBtn').html("Modulate");
+  });
+  att_tmp.addEventListener("load",(evt)=>{
+    console.log(att_ctx.globalCompositeOperation);
+    att_ctx.drawImage(cnv_layer,0,0,img_width,img_height);
+    att_ctx.globalCompositeOperation="source-in";
+    att_ctx.drawImage(att_tmp,0,0,img_width,img_height);
+    att_ctx.globalCompositeOperation="source-over";
+  });
+  paths=response.split('&');
+  result_image.src=paths[0]
+  att_tmp.src=paths[1]
+}
+
+function callback_getResult(response){
   console.log(response);
   var result_image = new Image();
   result_image.addEventListener("load",(evt)=>{
     res_ctx=result_layer.getContext("2d");
     res_ctx.drawImage(result_image,0,0,img_width,img_height);
     document.getElementById("result_layer").style.visibility="visible";
+    $('#convertBtn').html("Modulate");
   });
   result_image.src=response;
 }
 
-function convertToBinaryMap(){
+function convertToMask(){
   var canvas=document.createElement("canvas");
   var ctx=canvas.getContext("2d");
   canvas.width=img_width;
@@ -115,7 +167,7 @@ function convertToAttImage(){
   canvas.height=img_height;
   ctx.fillStyle="white";
   ctx.fillRect(0,0,img_width,img_height);
-  ctx.drawImage(cnv_layer,0,0);
+  ctx.drawImage(att_layer,0,0);
 
   return canvas.toDataURL("image/png");
 }
@@ -258,7 +310,7 @@ function drawAttention(sx,sy){
   var hei=ry-ly+1;
   console.log(lx,ly,rx,ry);
 
-  ctx.drawImage(colorMap,attend_lx*wid_ratio,attend_ly*hei_ratio,
+  att_ctx.drawImage(colorMap,attend_lx*wid_ratio,attend_ly*hei_ratio,
                       wid*wid_ratio,hei*hei_ratio, lx,ly,wid,hei);
 }
 function computeIndex(sx,sy,swidth){

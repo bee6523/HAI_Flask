@@ -29,19 +29,31 @@ def Step2Comp():
 def Step3Comp():
     return render_template("/pages/Step3Components.html")
 
+@app.route('/InitResult', methods=['POST'])
 def example_function():
+    img_file=request.form['img']
+    mask_file=request.form['mask']
+
+    image_arr=np.frombuffer(base64.b64decode(img_file.split(',')[1]),dtype=np.uint8)
+    image=cv2.imdecode(image_arr,flags=cv2.IMREAD_COLOR)
+    mask_arr=np.frombuffer(base64.b64decode(mask_file.split(',')[1]),dtype=np.uint8)
+    mask=cv2.imdecode(mask_arr,flags=cv2.IMREAD_COLOR)
+
     img_path="./engine/input_image.png"
     mask_path="./engine/input_mask.png"
 
-    ret_path = "./engine/model_output_image.png"
-    ret_att_path = "./engine/input_att.png"
+    ret_path = "./static/model_output_image.png"
+    ret_att_path = "./static/input_att.png"
+
+    cv2.imwrite(img_path,image)
+    cv2.imwrite(mask_path,mask)
 
     inpaint(image_path=img_path,
             mask_path=mask_path,
             out_image_path=ret_path,
             out_att_path=ret_att_path)
     # no need to write output, inpaint already does this
-    return ret_path, ret_att_path
+    return ret_path+"&"+ret_att_path
 
 @app.route('/Result', methods=['POST'])
 def showAttendResult():
