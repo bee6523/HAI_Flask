@@ -36,10 +36,10 @@ def example_function():
     ret_path = "./engine/model_output_image.png"
     ret_att_path = "./engine/input_att.png"
 
-    output, att = inpaint(image_path=img_path,
-                          mask_path=mask_path,
-                          out_image_path=ret_path,
-                          out_att_path=ret_att_path)
+    inpaint(image_path=img_path,
+            mask_path=mask_path,
+            out_image_path=ret_path,
+            out_att_path=ret_att_path)
     # no need to write output, inpaint already does this
     return ret_path, ret_att_path
 
@@ -65,10 +65,10 @@ def showAttendResult():
     cv2.imwrite(mask_path,mask)
     cv2.imwrite(att_path,att)
     
-    output = controlled_inpaint(image_path=img_path,
-                                mask_path=mask_path,
-                                att_path=att_path,
-                                out_image_path=ret_path)
+    controlled_inpaint(image_path=img_path,
+                       mask_path=mask_path,
+                       att_path=att_path,
+                       out_image_path=ret_path)
     # no need to write output, controlled_inpaint already does this
     # cv2.imwrite(ret_path,output)
 
