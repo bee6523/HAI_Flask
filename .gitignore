@@ -2,4 +2,7 @@
 */.DS_Store
 engine/venv/*
 engine/deepfillv2/model_logs/*
-
+engine/input_att.png
+engine/input_image.png
+engine/input_mask.png
+static/img/ret.png
