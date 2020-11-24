@@ -23,7 +23,6 @@ var app = Sammy(function () {
         $("#step2Components").hide();
         $("#stepInfo").text("Step3: Set reference region");
         $("#nextBtn").show();
-        $("#convertBtn").show();
         $("#toolBox").load("./pages/Step3Components.html");
     });
 
@@ -33,6 +32,7 @@ var app = Sammy(function () {
         $("#step3Components").hide();
         $("#nextBtn").hide();
         $("#prevBtn").hide();
+        $("#convertBtn").hide();
         $("#restartBtn").show();
     });
 

@@ -4,7 +4,7 @@ var image_file, image, colorMap, loadImage,
   cnv_layer, cnv_ctx,
   att_layer, att_ctx,
   tmp_layer,tmp_ctx,
-  result_layer,
+  result_layer, result_ctx,
   prevX,prevY,
   currX,currY,
   attendX,attendY;
@@ -25,6 +25,7 @@ let processor = {
       cnv_ctx = cnv_layer.getContext("2d");
       tmp_ctx=tmp_layer.getContext("2d");
       att_ctx=att_layer.getContext("2d");
+      result_ctx=result_layer.getContext("2d");
       colorMap = new Image();
       colorMap.src="/static/img/colorpalette.png";
       loadImage = new Image();
@@ -63,8 +64,10 @@ function startDrawing(){
   tmp_layer.addEventListener("mouseout",endDraw);
 }
 function startAttending(){
-  document.getElementById("result_layer").style.visibility="hidden";
-  //tmp_ctx.drawImage(loadImage,img_width/2-50,img_height/2-50,100,100);
+  document.getElementById("result_layer").style.visibility="visible";
+  result_ctx.clearRect(0,0,img_width,img_height);
+  result_ctx.drawImage(loadImage,img_width/2-50,img_height/2-50,100,100);
+  
   mask=convertToMask();
   formData = new FormData();
   formData.append("img",img_layer.toDataURL("image/png"));
@@ -96,11 +99,12 @@ function showResult(){
     $('#convertBtn').html("Convert");
     showingResult=false;
   }else{
-    showingResult=true;
     console.log(image.src);
 
     //show loading image while processing
-    //tmp_ctx.drawImage(loadImage,img_width/2-50,img_height/2-50,100,100);
+    document.getElementById("result_layer").style.visibility="visible";
+    result_ctx.clearRect(0,0,img_width,img_height);
+    result_ctx.drawImage(loadImage,img_width/2-50,img_height/2-50,100,100);
 
     mask=convertToMask();
     attention=convertToAttImage();
@@ -127,11 +131,9 @@ function callback_getAttention(response){
   var att_tmp=new Image();
   var result_image= new Image();
   result_image.addEventListener("load",(evt)=>{
-    res_ctx=result_layer.getContext("2d");
-    res_ctx.drawImage(result_image,0,0,img_width,img_height);
-    document.getElementById("result_layer").style.visibility="visible";
-    tmp_ctx.clearRect(0,0,img_width,img_height);
+    result_ctx.drawImage(result_image,0,0,img_width,img_height);
     $('#convertBtn').html("Modulate");
+    $('#convertBtn').show();
   });
   att_tmp.addEventListener("load",(evt)=>{
     console.log(att_ctx.globalCompositeOperation);
@@ -149,10 +151,8 @@ function callback_getResult(response){
   console.log(response);
   var result_image = new Image();
   result_image.addEventListener("load",(evt)=>{
-    res_ctx=result_layer.getContext("2d");
-    res_ctx.drawImage(result_image,0,0,img_width,img_height);
-    document.getElementById("result_layer").style.visibility="visible";
-    tmp_ctx.clearRect(0,0,img_width,img_height);
+    showingResult=true;
+    result_ctx.drawImage(result_image,0,0,img_width,img_height);
     $('#convertBtn').html("Modulate");
   });
   result_image.src=response + "?t=" + new Date().getTime();
