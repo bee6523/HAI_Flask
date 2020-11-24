@@ -30,7 +30,7 @@ def get_ref_colormap(width, height, out_path='colorpalette.jpg'):
     return colormap
 
 
-def inpaint(image_path, mask_path, out_image_path, out_att_path, checkpoint_dir='deepfillv1/model_logs'):
+def inpaint(image_path, mask_path, out_image_path, out_att_path, checkpoint_dir='./engine/deepfillv1/model_logs'):
     tf.reset_default_graph()
     model = InpaintCAModel()
     image = cv2.imread(image_path)
@@ -78,7 +78,7 @@ def inpaint(image_path, mask_path, out_image_path, out_att_path, checkpoint_dir=
     return out_image, out_flow
 
 
-def controlled_inpaint(image_path, mask_path, att_path, out_image_path, checkpoint_dir='deepfillv1/model_logs'):
+def controlled_inpaint(image_path, mask_path, att_path, out_image_path, checkpoint_dir='./engine/deepfillv1/model_logs'):
     tf.reset_default_graph()
     model = InpaintCAModel()
     image = cv2.imread(image_path)

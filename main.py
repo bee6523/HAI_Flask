@@ -53,10 +53,10 @@ def showAttendResult():
 
     
     output = controlled_inpaint(image_path=img_path,
-                            mask_path=mask_path,
-                            att_path=att_path,
-                            out_image_path='./output_controlled.png')
-    cv2.imwrite(ret_path,output)
+                                mask_path=mask_path,
+                                att_path=att_path,
+                                out_image_path='./output_controlled.png')
+    cv2.imwrite(ret_path, output)
     # cv2.imwrite(ret_path,image)
 
     return ret_path
