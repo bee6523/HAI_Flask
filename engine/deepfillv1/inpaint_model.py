@@ -337,7 +337,7 @@ class InpaintCAModel(Model):
             config=None)
         batch_predict = x2
         
-        flow = resize(flow, scale=x1.shape[1]//flow.shape[1], func=tf.image.resize_nearest_neighbor)
+        flow = resize(flow, scale=int(x1.shape[1]//flow.shape[1]), func=tf.image.resize_nearest_neighbor)
         print(f'Shape of coarse output: {x1.shape}')
         print(f'Shape of fine output: {x2.shape}')
         print(f'Shape of attention values: {att.shape}')
