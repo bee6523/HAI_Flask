@@ -16,7 +16,7 @@ canvas {position: absolute; left: 0; right:0;}
 #attendingGadgets {
     list-style-type: none;
 }
-#imgContainer {margin-top: 200px;}
+#imgContainer {margin-top: 100px;}
 button {
 	font-family: 'Quicksand';
     font-size: 1.2em;

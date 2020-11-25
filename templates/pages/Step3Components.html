@@ -11,6 +11,7 @@
       <li><button id="brushBtn" onClick="brushrush_3()"><i class="fas fa-paint-brush"></i></button></li>
     </div>
     <div id="imgContainer">
+      <canvas id="color_layer" width="20" height="20"></canvas>
       <img id="colorpalette" src="{{url_for('static', filename = 'img/colorpalette.png')}}" width="110" height="80" onload="palettesize()">
     </div>
   </body>
