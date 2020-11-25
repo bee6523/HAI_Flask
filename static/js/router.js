@@ -20,7 +20,6 @@ var app = Sammy(function () {
 
     this.get("#/step3", function () {
         startAttending();
-        $("#step2Components").hide();
         $("#stepInfo").text("Step3: Set reference region");
         $("#nextBtn").show();
         $("#toolBox").load("./pages/Step3Components.html");

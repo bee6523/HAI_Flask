@@ -269,6 +269,10 @@ function brushrush_3() {
   document.getElementById("fillBtn").disabled=false;
   document.getElementById("brushBtn").disabled=true;
 }
+function palettesize() {
+  $("#colorpalette").width(img_width/3);
+  $("#colorpalette").height(img_height/3);
+}
 function drawAttention(sx,sy){
   var hei_ratio=colorMap.height/img_height;
   var wid_ratio=colorMap.width/img_width;

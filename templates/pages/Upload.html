@@ -4,15 +4,15 @@
     <link href="{{url_for('static', filename = 'css/Upload.css')}}" rel="stylesheet">
   </head>
   <body>
+    <div>
+      <input type="file" name="file" id="userUploadedImage" accept="image/*">
+    </div>
     <div id="canvasDiv">
       <canvas id="img_layer" width="550" height="400"></canvas>
       <canvas id="canvas_layer" width="550" height="400"></canvas>
       <canvas id="att_layer" width="550" height="400"></canvas>
       <canvas id="tmp_layer" width="550" height="400"></canvas>
       <canvas id="result_layer" width="550" height="400"></canvas>
-    </div>
-    <div>
-      <input type="file" name="file" id="userUploadedImage" accept="image/*">
     </div>
     <br><br>
     <button id="prevBtn" hidden onClick=prev()>Previous step</button>

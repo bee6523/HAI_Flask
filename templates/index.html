@@ -15,20 +15,20 @@
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
   </head>
   <body>
-    <div><image src="{{url_for('static', filename = 'img/logo.png')}}" width="800px" style ="color:#6b4600"></image></div>
+    <div><a href="/"><image src="{{url_for('static', filename = 'img/logo.png')}}" width="800px" style ="color:#6b4600"></image></a></div>
     <div style = "width:100%">
         <ol class="progress">
             <li class="is-active" data-step="1">
-              Step 1
+              Upload an image
             </li>
             <li data-step="2">
-              Step 2
+              Add mask to image
             </li>
             <li data-step="3">
-              Step 3
+              See initial result & Modulate attention
             </li>
             <li data-step="4" class="progress__last">
-              Step 4  
+              Compare the result!
             </li>
         </ol>
         <div class="container">
