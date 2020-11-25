@@ -12,7 +12,9 @@
     </div>
     <div id="imgContainer">
       <canvas id="color_layer" width="20" height="20"></canvas>
-      <img id="colorpalette" src="{{url_for('static', filename = 'img/colorpalette.png')}}" width="110" height="80" onload="palettesize()">
+      <canvas id="colorpalette" width="100" height="80"></canvas>
+      <canvas id="marker_layer" width="100" height="80"></canvas>
+      <script> palettesize() </script>
     </div>
   </body>
 </html>

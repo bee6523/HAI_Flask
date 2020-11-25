@@ -213,6 +213,14 @@ function doDraw(e){
         tmp_ctx.arc(currX,currY,7,Math.PI*2,0,true);
         tmp_ctx.fillStyle="red";
         tmp_ctx.fill();
+        marker_layer=document.getElementById("marker_layer");
+        sm_ctx = marker_layer.getContext("2d");
+        sm_ctx.clearRect(0,0,marker_layer.width,marker_layer.height);
+        sm_ctx.beginPath();
+        sm_ctx.arc(currX/3,currY/3,5,0,Math.PI*2,false);
+        sm_ctx.arc(currX/3,currY/3,3,Math.PI*2,0,true);
+        sm_ctx.fillStyle="red";
+        sm_ctx.fill();
     }
   }
 }
@@ -222,6 +230,13 @@ function endDraw(e){
     case "picker":
       attendX=currX;
       attendY=currY;
+      /* colormap image -> ratio modified image : ratio calculation needed
+      color_layer=document.getElementById("color_layer");
+      box_ctx = color_layer.getContext("2d");
+      color_layer.style.visibility="visible";
+      box_ctx.clearRect(0,0,color_layer.width,color_layer.height);
+      box_ctx.drawImage(colorMap,currX/3-5, currY/3-5, 10, 10, 0, 0, color_layer.width, color_layer.height);
+      */
       break;
     case "fill":
       break;
@@ -270,8 +285,16 @@ function brushrush_3() {
   document.getElementById("brushBtn").disabled=true;
 }
 function palettesize() {
-  $("#colorpalette").width(img_width/3);
-  $("#colorpalette").height(img_height/3);
+  var palette_width=img_width/3;
+  var palette_height=img_height/3;
+  pal_layer=document.getElementById("colorpalette");
+  mark_layer=document.getElementById("marker_layer");
+  pal_ctx = pal_layer.getContext("2d");
+  mark_layer.width=pal_layer.width=palette_width;
+  mark_layer.height=pal_layer.height=palette_height;
+  pal_layer.style.visibility="visible";
+  pal_ctx.clearRect(0,0,palette_width,palette_height);
+  pal_ctx.drawImage(colorMap,0,0,palette_width,palette_height);
 }
 function drawAttention(sx,sy){
   var hei_ratio=colorMap.height/img_height;

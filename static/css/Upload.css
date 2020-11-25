@@ -26,3 +26,9 @@ button {
     border-radius: 8px;
     background-color: white;
 }
+#imgContainer{
+    position: relative;
+}
+#colorpalette { z-index:0; }
+#marker_layer { z-index: 1; }
+#color_layer { z-index: 2; }
