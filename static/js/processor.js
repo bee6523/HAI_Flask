@@ -305,8 +305,9 @@ function endDraw(e){
       att_ctx.drawImage(colorMap,startingX*wratio,startingY*hratio,recWidth*wratio,recHeight*hratio,prevX,prevY,recWidth,recHeight);
       att_ctx.globalCompositeOperation = "source-over";
       /* display region in colormap element */
-      marker_layer=document.getElementById("marker_layer");
-      sm_ctx = marker_layer.getContext("2d");
+      reg_layer=document.getElementById("region_layer");
+      sm_ctx = reg_layer.getContext("2d");
+      sm_ctx.clearRect(0,0,reg_layer.width,reg_layer.height);
       sm_ctx.strokeStyle="red";
       sm_ctx.strokeRect(startingX/3,startingY/3,recWidth/3,recHeight/3);
       break;
@@ -325,8 +326,9 @@ function endDraw(e){
       tmp_ctx.clearRect(0,0,tmp_layer.width,tmp_layer.height);
       att_ctx.globalCompositeOperation = "source-over";
       /* display region in colormap element */
-      marker_layer=document.getElementById("marker_layer");
-      sm_ctx = marker_layer.getContext("2d");
+      reg_layer=document.getElementById("region_layer");
+      sm_ctx = reg_layer.getContext("2d");
+      sm_ctx.clearRect(0,0,reg_layer.width,reg_layer.height);
       sm_ctx.strokeStyle="red";
       sm_ctx.strokeRect(startingX/3,startingY/3,pathWidth/3,pathHeight/3);
       break;
@@ -394,9 +396,10 @@ function palettesize() {
   var palette_height=img_height/3;
   pal_layer=document.getElementById("colorpalette");
   mark_layer=document.getElementById("marker_layer");
+  reg_layer=document.getElementById("region_layer");
   pal_ctx = pal_layer.getContext("2d");
-  mark_layer.width=pal_layer.width=palette_width;
-  mark_layer.height=pal_layer.height=palette_height;
+  reg_layer.width=mark_layer.width=pal_layer.width=palette_width;
+  reg_layer.height=mark_layer.height=pal_layer.height=palette_height;
   pal_layer.style.visibility="visible";
   pal_ctx.clearRect(0,0,palette_width,palette_height);
   pal_ctx.drawImage(colorMap,0,0,palette_width,palette_height);

@@ -98,4 +98,10 @@ button {
     left: 0;
     right: 0;
 }
+#region_layer {
+    z-index: 1;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
 #color_layer { z-index:2; }
