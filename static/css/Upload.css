@@ -3,7 +3,11 @@
     height: 400px;
     position: relative;
 }
-canvas {position: absolute; left: 0; right:0;}
+#img_layer, #canvas_layer, #att_layer, #tmp_layer, #result_layer {
+    position: absolute;
+    left: 0;
+    right:0;
+}
 #img_layer{ z-index: 0;}
 #canvas_layer{ z-index: 1; }
 #att_layer{ z-index: 2; }
@@ -16,7 +20,6 @@ canvas {position: absolute; left: 0; right:0;}
 #attendingGadgets {
     list-style-type: none;
 }
-#imgContainer {margin-top: 100px;}
 button {
 	font-family: 'Quicksand';
     font-size: 1.2em;
@@ -26,9 +29,26 @@ button {
     border-radius: 8px;
     background-color: white;
 }
-#imgContainer{
+#mapContainer {
+    position: relative;
+    margin-top: 100px;
+}
+#palContainer {
     position: relative;
 }
-#colorpalette { z-index:0; }
-#marker_layer { z-index: 1; }
-#color_layer { z-index: 2; }
+#markContainer {
+    text-align: left;
+}
+#colorpalette { 
+    z-index: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+#marker_layer { 
+    z-index: 1;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+#color_layer { z-index:2; }

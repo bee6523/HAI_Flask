@@ -230,13 +230,14 @@ function endDraw(e){
     case "picker":
       attendX=currX;
       attendY=currY;
-      /* colormap image -> ratio modified image : ratio calculation needed
+      /* colormap image -> ratio modified image : ratio calculation needed */
       color_layer=document.getElementById("color_layer");
       box_ctx = color_layer.getContext("2d");
       color_layer.style.visibility="visible";
       box_ctx.clearRect(0,0,color_layer.width,color_layer.height);
-      box_ctx.drawImage(colorMap,currX/3-5, currY/3-5, 10, 10, 0, 0, color_layer.width, color_layer.height);
-      */
+      var hratio = colorMap.height/tmp_layer.height
+      var wratio = colorMap.width/tmp_layer.width
+      box_ctx.drawImage(colorMap,currX*wratio-5, currY*hratio-5, 10, 10, 0, 0, color_layer.width, color_layer.height);
       break;
     case "fill":
       break;
