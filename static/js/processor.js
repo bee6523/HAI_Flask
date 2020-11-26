@@ -282,7 +282,7 @@ function endDraw(e){
     case "picker":
       attendX=currX;
       attendY=currY;
-      /* display marker in colormap element */
+      /* display color preview in colormap element */
       color_layer=document.getElementById("color_layer");
       box_ctx = color_layer.getContext("2d");
       color_layer.style.visibility="visible";
@@ -304,21 +304,31 @@ function endDraw(e){
       att_ctx.globalCompositeOperation = "source-atop";
       att_ctx.drawImage(colorMap,startingX*wratio,startingY*hratio,recWidth*wratio,recHeight*hratio,prevX,prevY,recWidth,recHeight);
       att_ctx.globalCompositeOperation = "source-over";
+      /* display region in colormap element */
+      marker_layer=document.getElementById("marker_layer");
+      sm_ctx = marker_layer.getContext("2d");
+      sm_ctx.strokeStyle="red";
+      sm_ctx.strokeRect(startingX/3,startingY/3,recWidth/3,recHeight/3);
       break;
     case "brush_3":
-      pathWidth = lineHx-lineLx;
-      pathHeight = lineHy-lineLy;
+      pathWidth = lineHx-lineLx+2*lineWidth;
+      pathHeight = lineHy-lineLy+2*lineWidth;
       startingX = attendX-pathWidth/2;
       startingY = attendY-pathHeight/2;
       hratio = colorMap.height/tmp_layer.height;
       wratio = colorMap.width/tmp_layer.width;
       tmp_ctx.globalCompositeOperation = "source-in";
-      tmp_ctx.drawImage(colorMap,startingX*wratio,startingY*hratio,pathWidth*wratio,pathHeight*hratio,lineLx,lineLy,pathWidth,pathHeight);
+      tmp_ctx.drawImage(colorMap,startingX*wratio,startingY*hratio,pathWidth*wratio,pathHeight*hratio,lineLx-lineWidth,lineLy-lineWidth,pathWidth,pathHeight);
       tmp_ctx.globalCompositeOperation = "source-over";
       att_ctx.globalCompositeOperation = "source-atop";
       att_ctx.drawImage(tmp_layer,0,0);
       tmp_ctx.clearRect(0,0,tmp_layer.width,tmp_layer.height);
       att_ctx.globalCompositeOperation = "source-over";
+      /* display region in colormap element */
+      marker_layer=document.getElementById("marker_layer");
+      sm_ctx = marker_layer.getContext("2d");
+      sm_ctx.strokeStyle="red";
+      sm_ctx.strokeRect(startingX/3,startingY/3,pathWidth/3,pathHeight/3);
       break;
     default:
       cnv_ctx.drawImage(tmp_layer,0,0);
