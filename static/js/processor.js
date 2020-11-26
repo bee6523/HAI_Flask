@@ -201,7 +201,7 @@ function doDraw(e){
         tmp_ctx.clearRect(prevX,prevY,currX-prevX,currY-prevY);
         currX=e.layerX;
         currY=e.layerY;
-        tmp_ctx.fillStyle="white"
+        tmp_ctx.fillStyle="white";
         tmp_ctx.fillRect(prevX,prevY,currX-prevX,currY-prevY);
         break;
       case "picker":
@@ -221,6 +221,12 @@ function doDraw(e){
         sm_ctx.arc(currX/3,currY/3,3,Math.PI*2,0,true);
         sm_ctx.fillStyle="red";
         sm_ctx.fill();
+      /* case "rect_3": */
+        tmp_ctx.clearRect(prevX,prevY,currX-prevX,currY-prevY);
+        currX=e.layerX;
+        currY=e.layerY;
+        tmp_ctx.fillStyle="white"
+        tmp_ctx.fillRect(prevX,prevY,currX-prevX,currY-prevY);
     }
   }
 }
@@ -262,29 +268,44 @@ function recrec() {
   document.getElementById("brushBtn").disabled=false;
   document.getElementById("rectBtn").disabled=true;  
 }
-function brusrush() {
+function brusrush(n) {
   tool="brush";
+  lineWidth=n;
   document.getElementById("rectBtn").disabled=false;
   document.getElementById("brushBtn").disabled=true;
 }
+
 function pickicker() {
   tool="picker";
   document.getElementById("pickerBtn").disabled=true;
   document.getElementById("fillBtn").disabled=false;
-  document.getElementById("brushBtn").disabled=false;
+  document.getElementById("rect3Btn").disabled=false;
+  document.getElementById("brush3Btn").disabled=false;
 }
 function fillill() {
   tool="fill";
   document.getElementById("pickerBtn").disabled=false;
   document.getElementById("fillBtn").disabled=true;
-  document.getElementById("brushBtn").disabled=false;
+  document.getElementById("rect3Btn").disabled=false;
+  document.getElementById("brush3Btn").disabled=false;
 }
-function brushrush_3() {
-  tool="brush_3";
+function rectect() {
+  tool="rect_3";
   document.getElementById("pickerBtn").disabled=false;
   document.getElementById("fillBtn").disabled=false;
-  document.getElementById("brushBtn").disabled=true;
+  document.getElementById("rect3Btn").disabled=true;
+  document.getElementById("brush3Btn").disabled=false;
+
 }
+function brushrush_3(n) {
+  tool="brush_3";
+  lineWidth=n;
+  document.getElementById("pickerBtn").disabled=false;
+  document.getElementById("fillBtn").disabled=false;
+  document.getElementById("rect3Btn").disabled=false;
+  document.getElementById("brush3Btn").disabled=true;
+}
+
 function palettesize() {
   var palette_width=img_width/3;
   var palette_height=img_height/3;

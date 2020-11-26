@@ -6,7 +6,14 @@
   <body id="step2Components">
     <div id="maskingGadgets">
       <li><button id="rectBtn" onClick="recrec()" disabled=true><i class="fas fa-vector-square"></i></button></li>
-      <li><button id="brushBtn" onClick="brusrush()"><i class="fas fa-paint-brush"></i></button></li>
+      <li><div id="brushsize"><button id="brushBtn">
+        <i class="fas fa-paint-brush"></i></button>
+        <div id="sizeselector">
+          <button onClick="brusrush(5)"><span class="dot dot5"></span><br>5</button>
+          <button onClick="brusrush(10)"><span class="dot dot10"></span><br>10</button>
+          <button onClick="brusrush(25)"><span class="dot dot25"></span><br>25</button>
+        </div>
+      </div></li>
     </div>
   <script type="text/javascript" src="{{url_for('static', filename = 'js/processor.js')}}"></script>
   </body>
