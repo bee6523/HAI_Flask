@@ -375,34 +375,6 @@ function fillInpaintingArea(maskData,paletteData,attData,sx,sy, traverseData){
   }
   
 }
-//   lx++;
-//   for(ly=sy;ly>=0;ly--){
-//     index=computeIndex(lx,ly,img_width);
-//     if(data[index+3]==0)
-//       break;
-//   }
-//   ly++;
-//   for(rx=sx;rx<img_width;rx++){
-//     index=computeIndex(rx,sy,img_width);
-//     if(data[index+3]==0)
-//       break;
-//   }
-//   rx--;
-//   for(ry=sy;ry<img_height;ry++){
-//     index=computeIndex(rx,ry,img_width);
-//     if(data[index+3]==0)
-//       break;
-//   }
-//   ry--;
-//   var attend_lx=attendX+lx-sx;
-//   var attend_ly=attendY+ly-sy;
-//   var wid=rx-lx+1;
-//   var hei=ry-ly+1;
-//   console.log(lx,ly,rx,ry);
-
-//   att_ctx.drawImage(colorMap,attend_lx*wid_ratio,attend_ly*hei_ratio,
-//                       wid*wid_ratio,hei*hei_ratio, lx,ly,wid,hei);
-// }
 function computeIndex(sx,sy,swidth){
   return (sx+sy*swidth)*4;
 }
