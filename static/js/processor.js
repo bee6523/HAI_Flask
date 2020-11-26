@@ -7,7 +7,9 @@ var image_file, image, colorMap, loadImage,
   result_layer, result_ctx,
   prevX,prevY,
   currX,currY,
-  attendX,attendY;
+  attendX,attendY,
+  lineLx, lineLy,
+  lineHx, lineHy;
 var showingResult=true; //true if displaying result, false if modulating phase
 var mask, attention;
 var tool="rect";
@@ -179,7 +181,19 @@ function initDraw(e){
   if(tool=="fill"){
     drawAttention(e.layerX,e.layerY);
     return;
-  }else{
+  }
+  else if (tool=="brush_3"){
+    draw_flag=true;
+    currX = e.layerX;
+    currY = e.layerY;
+    prevX=currX;
+    prevY=currY;
+    lineLx=currX;
+    lineLy=currY;
+    lineHx=currX;
+    lineHy=currY;
+  }
+  else{
     draw_flag=true;
     currX = e.layerX;
     currY = e.layerY;
@@ -234,6 +248,31 @@ function doDraw(e){
           tmp_ctx.fillStyle=`rgba(${r},${g},${b},${a/255})`;
           tmp_ctx.fillRect(prevX,prevY,currX-prevX,currY-prevY);
         }
+        break;
+      case "brush_3":
+        color_layer=document.getElementById("color_layer");
+        box_ctx = color_layer.getContext("2d");
+        pixData = box_ctx.getImageData(10,10,1,1);
+        [r, g, b, a] = pixData.data;
+        if ([r,g,b,a]!=[0,0,0,0]) {
+          if (currX<lineLx) lineLx = currX;
+          if (currX>lineHx) lineHx = currX;
+          if (currY<lineLy) lineLy = currY;
+          if (currY>lineHy) lineHy = currY;
+          prevX = currX;
+          prevY = currY;
+          currX = e.layerX;
+          currY = e.layerY;
+          tmp_ctx.beginPath();
+          tmp_ctx.moveTo(prevX, prevY);
+          tmp_ctx.lineTo(currX, currY);
+          tmp_ctx.strokeStyle =`rgba(${r},${g},${b},${a/255})`;
+          tmp_ctx.lineWidth = lineWidth;
+          tmp_ctx.lineCap = "round";
+          tmp_ctx.stroke();
+          tmp_ctx.closePath();
+        }
+        break;
     }
   }
 }
@@ -264,6 +303,23 @@ function endDraw(e){
       wratio = colorMap.width/tmp_layer.width;
       att_ctx.globalCompositeOperation = "source-atop";
       att_ctx.drawImage(colorMap,startingX*wratio,startingY*hratio,recWidth*wratio,recHeight*hratio,prevX,prevY,recWidth,recHeight);
+      att_ctx.globalCompositeOperation = "source-over";
+      break;
+    case "brush_3":
+      pathWidth = lineHx-lineLx;
+      pathHeight = lineHy-lineLy;
+      startingX = attendX-pathWidth/2;
+      startingY = attendY-pathHeight/2;
+      hratio = colorMap.height/tmp_layer.height;
+      wratio = colorMap.width/tmp_layer.width;
+      tmp_ctx.globalCompositeOperation = "source-in";
+      tmp_ctx.drawImage(colorMap,startingX*wratio,startingY*hratio,pathWidth*wratio,pathHeight*hratio,lineLx,lineLy,pathWidth,pathHeight);
+      tmp_ctx.globalCompositeOperation = "source-over";
+      att_ctx.globalCompositeOperation = "source-atop";
+      att_ctx.drawImage(tmp_layer,0,0);
+      tmp_ctx.clearRect(0,0,tmp_layer.width,tmp_layer.height);
+      att_ctx.globalCompositeOperation = "source-over";
+      break;
     default:
       cnv_ctx.drawImage(tmp_layer,0,0);
       tmp_ctx.clearRect(0,0,tmp_layer.width,tmp_layer.height);
@@ -314,7 +370,7 @@ function rectect() {
   document.getElementById("brush3Btn").disabled=false;
 
 }
-function brushrush_3(n) {
+function brusrush_3(n) {
   tool="brush_3";
   lineWidth=n;
   document.getElementById("pickerBtn").disabled=false;
