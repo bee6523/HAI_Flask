@@ -221,12 +221,19 @@ function doDraw(e){
         sm_ctx.arc(currX/3,currY/3,3,Math.PI*2,0,true);
         sm_ctx.fillStyle="red";
         sm_ctx.fill();
-      /* case "rect_3": */
-        tmp_ctx.clearRect(prevX,prevY,currX-prevX,currY-prevY);
-        currX=e.layerX;
-        currY=e.layerY;
-        tmp_ctx.fillStyle="white"
-        tmp_ctx.fillRect(prevX,prevY,currX-prevX,currY-prevY);
+        break;
+      case "rect_3":
+        color_layer=document.getElementById("color_layer");
+        box_ctx = color_layer.getContext("2d");
+        pixData = box_ctx.getImageData(10,10,1,1);
+        [r, g, b, a] = pixData.data;
+        if ([r,g,b,a]!=[0,0,0,0]) {
+          tmp_ctx.clearRect(prevX,prevY,currX-prevX,currY-prevY);
+          currX=e.layerX;
+          currY=e.layerY;
+          tmp_ctx.fillStyle=`rgba(${r},${g},${b},${a/255})`;
+          tmp_ctx.fillRect(prevX,prevY,currX-prevX,currY-prevY);
+        }
     }
   }
 }
@@ -236,17 +243,27 @@ function endDraw(e){
     case "picker":
       attendX=currX;
       attendY=currY;
-      /* colormap image -> ratio modified image : ratio calculation needed */
+      /* display marker in colormap element */
       color_layer=document.getElementById("color_layer");
       box_ctx = color_layer.getContext("2d");
       color_layer.style.visibility="visible";
       box_ctx.clearRect(0,0,color_layer.width,color_layer.height);
-      var hratio = colorMap.height/tmp_layer.height
-      var wratio = colorMap.width/tmp_layer.width
+      hratio = colorMap.height/tmp_layer.height;
+      wratio = colorMap.width/tmp_layer.width;
       box_ctx.drawImage(colorMap,currX*wratio-5, currY*hratio-5, 10, 10, 0, 0, color_layer.width, color_layer.height);
       break;
     case "fill":
       break;
+    case "rect_3":
+      tmp_ctx.clearRect(0,0,tmp_layer.width,tmp_layer.height);
+      recWidth = currX-prevX;
+      recHeight = currY-prevY;
+      startingX = attendX-recWidth/2;
+      startingY = attendY-recHeight/2;
+      hratio = colorMap.height/tmp_layer.height;
+      wratio = colorMap.width/tmp_layer.width;
+      att_ctx.globalCompositeOperation = "source-atop";
+      att_ctx.drawImage(colorMap,startingX*wratio,startingY*hratio,recWidth*wratio,recHeight*hratio,prevX,prevY,recWidth,recHeight);
     default:
       cnv_ctx.drawImage(tmp_layer,0,0);
       tmp_ctx.clearRect(0,0,tmp_layer.width,tmp_layer.height);
