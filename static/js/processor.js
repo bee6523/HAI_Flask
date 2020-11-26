@@ -296,52 +296,113 @@ function palettesize() {
   pal_ctx.clearRect(0,0,palette_width,palette_height);
   pal_ctx.drawImage(colorMap,0,0,palette_width,palette_height);
 }
-function drawAttention(sx,sy){
-  var hei_ratio=colorMap.height/img_height;
-  var wid_ratio=colorMap.width/img_width;
-  var lx,ly,rx,ry;
-  const ctx=cnv_ctx;
 
-  var imgData=ctx.getImageData(0,0,img_width,img_height);
-  var data=imgData.data;
-  if(data[computeIndex(sx,sy)+3]==0){ //if click point is not inpainting region
+function drawAttention(sx,sy){
+  var paletteCanvas=document.createElement("canvas");
+  var p_ctx=paletteCanvas.getContext("2d");
+  paletteCanvas.width=img_width;
+  paletteCanvas.height=img_height;
+  p_ctx.drawImage(colorMap,0,0,img_width,img_height);
+
+  var imgData=cnv_ctx.getImageData(0,0,img_width,img_height);
+  var paletteData=p_ctx.getImageData(0,0,img_width,img_height);
+  var attentionData=att_ctx.getImageData(0,0,img_width,img_height);
+
+  var traverseData=new Array(img_width*img_height);
+  traverseData = traverseData.fill(0);
+
+  fillInpaintingArea(imgData.data,paletteData.data,attentionData.data,sx,sy,traverseData);
+  console.log("applyFill");
+  att_ctx.putImageData(attentionData,0,0);
+}
+
+
+//three imgData should have same width/height.
+function fillInpaintingArea(maskData,paletteData,attData,sx,sy, traverseData){
+  trav_queue=new Array();
+  index = computeIndex(sx,sy,img_width)
+  startX=sx;
+  startY=sy;
+  if(maskData[index+3]==0){ //if click point is not inpainting region
     return;
   }
+  trav_queue.push([sx,sy]);
+  while(trav_queue.length>0){
+    [sx,sy]=trav_queue.shift();
+    if(traverseData[computeIndex(sx,sy,img_width)/4]!=0){
+      continue;
+    }
+    for(lx=sx;lx>=0;lx--){
+      index=computeIndex(lx,sy,img_width);
+      if(maskData[index+3]==0){
+        break;
+      }
+    }
+    lx++;
+    for(rx=sx;rx<img_width;rx++){
+      index=computeIndex(rx,sy,img_width);
+      if(maskData[index+3]==0)
+        break;
+    }
+    rx--;
 
-  for(lx=sx;lx>=0;lx--){
-    index=computeIndex(lx,sy,img_width);
-    if(data[index+3]==0){
-      break;
+    for(sx=lx;sx<=rx;sx++){
+      index=computeIndex(sx,sy,img_width);
+      traverseData[index/4]=1;  //mark as traversed
+
+      ax=attendX+(sx-startX);
+      ay=attendY+(sy-startY);
+      if(ax>=0 && ax<img_width && ay>=0 && ay<img_height){ 
+        //fill color if attending region is in image boundary
+        attend_index=computeIndex(ax,ay,img_width);
+  
+        [r,g,b,a]=paletteData.slice(attend_index,attend_index+4);
+        attData[index]=r;
+        attData[index+1]=g;
+        attData[index+2]=b;
+        attData[index+3]=a;
+      }
+
+      index=computeIndex(sx,sy+1,img_width);
+      if(maskData[index+3]!=0){
+        trav_queue.push([sx,sy+1]);
+      }
+      index=computeIndex(sx,sy-1,img_width);
+      if(maskData[index+3]!=0){
+        trav_queue.push([sx,sy-1]);
+      }
     }
   }
-  lx++;
-  for(ly=sy;ly>=0;ly--){
-    index=computeIndex(lx,ly,img_width);
-    if(data[index+3]==0)
-      break;
-  }
-  ly++;
-  for(rx=sx;rx<img_width;rx++){
-    index=computeIndex(rx,sy,img_width);
-    if(data[index+3]==0)
-      break;
-  }
-  rx--;
-  for(ry=sy;ry<img_height;ry++){
-    index=computeIndex(rx,ry,img_width);
-    if(data[index+3]==0)
-      break;
-  }
-  ry--;
-  var attend_lx=attendX+lx-sx;
-  var attend_ly=attendY+ly-sy;
-  var wid=rx-lx+1;
-  var hei=ry-ly+1;
-  console.log(lx,ly,rx,ry);
-
-  att_ctx.drawImage(colorMap,attend_lx*wid_ratio,attend_ly*hei_ratio,
-                      wid*wid_ratio,hei*hei_ratio, lx,ly,wid,hei);
+  
 }
+//   lx++;
+//   for(ly=sy;ly>=0;ly--){
+//     index=computeIndex(lx,ly,img_width);
+//     if(data[index+3]==0)
+//       break;
+//   }
+//   ly++;
+//   for(rx=sx;rx<img_width;rx++){
+//     index=computeIndex(rx,sy,img_width);
+//     if(data[index+3]==0)
+//       break;
+//   }
+//   rx--;
+//   for(ry=sy;ry<img_height;ry++){
+//     index=computeIndex(rx,ry,img_width);
+//     if(data[index+3]==0)
+//       break;
+//   }
+//   ry--;
+//   var attend_lx=attendX+lx-sx;
+//   var attend_ly=attendY+ly-sy;
+//   var wid=rx-lx+1;
+//   var hei=ry-ly+1;
+//   console.log(lx,ly,rx,ry);
+
+//   att_ctx.drawImage(colorMap,attend_lx*wid_ratio,attend_ly*hei_ratio,
+//                       wid*wid_ratio,hei*hei_ratio, lx,ly,wid,hei);
+// }
 function computeIndex(sx,sy,swidth){
   return (sx+sy*swidth)*4;
 }
