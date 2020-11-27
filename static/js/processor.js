@@ -15,6 +15,9 @@ var mask, attention;
 var tool="rect";
 var lineWidth=5;
 var draw_flag=false;
+var change_flag=true;
+var maskUndoList=[];
+var attUndoList=[];
 
 let processor = {
     doLoad: function() {
@@ -58,14 +61,24 @@ let processor = {
 
 function startDrawing(){
   document.getElementById("result_layer").style.visibility="hidden";
+  att_layer.style.visibility="hidden";
   tmp_ctx.clearRect(0,0,img_width,img_height);
-  att_ctx.clearRect(0,0,img_width,img_height);
+  //att_ctx.clearRect(0,0,img_width,img_height);
   tmp_layer.addEventListener("mousemove",doDraw);
   tmp_layer.addEventListener("mousedown",initDraw);
   tmp_layer.addEventListener("mouseup",endDraw);
   tmp_layer.addEventListener("mouseout",endDraw);
 }
 function startAttending(){
+  console.log(change_flag)
+  att_layer.style.visibility="visible";
+  if(change_flag == false){
+    if(showingResult){
+      document.getElementById("result_layer").style.visibility="visible";
+    }
+    return;
+  }
+
   document.getElementById("result_layer").style.visibility="visible";
   result_ctx.clearRect(0,0,img_width,img_height);
   result_ctx.drawImage(loadImage,img_width/2-50,img_height/2-50,100,100);
@@ -94,6 +107,14 @@ function showResult(){
     $('#convertBtn').html("Convert");
     showingResult=false;
   }else{
+    if(change_flag == false){
+      document.getElementById("result_layer").style.visibility="visible";
+      $('#convertBtn').html("Modulate");
+      $('#convertBtn').show();
+      showingResult=true;
+      return;
+    }
+
     console.log(image.src);
 
     //show loading image while processing
@@ -127,6 +148,8 @@ function callback_getAttention(response){
   var result_image= new Image();
   result_image.addEventListener("load",(evt)=>{
     result_ctx.drawImage(result_image,0,0,img_width,img_height);
+    change_flag=false;
+    attUndoList=[];
     $('#convertBtn').html("Modulate");
     $('#convertBtn').show();
   });
@@ -147,6 +170,7 @@ function callback_getResult(response){
   var result_image = new Image();
   result_image.addEventListener("load",(evt)=>{
     showingResult=true;
+    change_flag=false;
     result_ctx.drawImage(result_image,0,0,img_width,img_height);
     $('#convertBtn').html("Modulate");
   });
@@ -179,7 +203,9 @@ function convertToAttImage(){
 
 function initDraw(e){
   if(tool=="fill"){
+    attUndoList.push(att_ctx.getImageData(0,0,img_width,img_height));
     drawAttention(e.layerX,e.layerY);
+    change_flag=true;
     return;
   }
   else if (tool=="brush_3"){
@@ -277,64 +303,76 @@ function doDraw(e){
   }
 }
 function endDraw(e){
-  draw_flag=false;
-  switch(tool){
-    case "picker":
-      attendX=currX;
-      attendY=currY;
-      /* display color preview in colormap element */
-      color_layer=document.getElementById("color_layer");
-      box_ctx = color_layer.getContext("2d");
-      color_layer.style.visibility="visible";
-      box_ctx.clearRect(0,0,color_layer.width,color_layer.height);
-      hratio = colorMap.height/tmp_layer.height;
-      wratio = colorMap.width/tmp_layer.width;
-      box_ctx.drawImage(colorMap,currX*wratio-5, currY*hratio-5, 10, 10, 0, 0, color_layer.width, color_layer.height);
-      break;
-    case "fill":
-      break;
-    case "rect_3":
-      tmp_ctx.clearRect(0,0,tmp_layer.width,tmp_layer.height);
-      recWidth = currX-prevX;
-      recHeight = currY-prevY;
-      startingX = attendX-recWidth/2;
-      startingY = attendY-recHeight/2;
-      hratio = colorMap.height/tmp_layer.height;
-      wratio = colorMap.width/tmp_layer.width;
-      att_ctx.globalCompositeOperation = "source-atop";
-      att_ctx.drawImage(colorMap,startingX*wratio,startingY*hratio,recWidth*wratio,recHeight*hratio,prevX,prevY,recWidth,recHeight);
-      att_ctx.globalCompositeOperation = "source-over";
-      /* display region in colormap element */
-      reg_layer=document.getElementById("region_layer");
-      sm_ctx = reg_layer.getContext("2d");
-      sm_ctx.clearRect(0,0,reg_layer.width,reg_layer.height);
-      sm_ctx.strokeStyle="red";
-      sm_ctx.strokeRect(startingX/3,startingY/3,recWidth/3,recHeight/3);
-      break;
-    case "brush_3":
-      pathWidth = lineHx-lineLx+2*lineWidth;
-      pathHeight = lineHy-lineLy+2*lineWidth;
-      startingX = attendX-pathWidth/2;
-      startingY = attendY-pathHeight/2;
-      hratio = colorMap.height/tmp_layer.height;
-      wratio = colorMap.width/tmp_layer.width;
-      tmp_ctx.globalCompositeOperation = "source-in";
-      tmp_ctx.drawImage(colorMap,startingX*wratio,startingY*hratio,pathWidth*wratio,pathHeight*hratio,lineLx-lineWidth,lineLy-lineWidth,pathWidth,pathHeight);
-      tmp_ctx.globalCompositeOperation = "source-over";
-      att_ctx.globalCompositeOperation = "source-atop";
-      att_ctx.drawImage(tmp_layer,0,0);
-      tmp_ctx.clearRect(0,0,tmp_layer.width,tmp_layer.height);
-      att_ctx.globalCompositeOperation = "source-over";
-      /* display region in colormap element */
-      reg_layer=document.getElementById("region_layer");
-      sm_ctx = reg_layer.getContext("2d");
-      sm_ctx.clearRect(0,0,reg_layer.width,reg_layer.height);
-      sm_ctx.strokeStyle="red";
-      sm_ctx.strokeRect(startingX/3,startingY/3,pathWidth/3,pathHeight/3);
-      break;
-    default:
-      cnv_ctx.drawImage(tmp_layer,0,0);
-      tmp_ctx.clearRect(0,0,tmp_layer.width,tmp_layer.height);
+  if(draw_flag){
+    draw_flag=false;
+    switch(tool){
+      case "picker":
+        attendX=currX;
+        attendY=currY;
+        /* display color preview in colormap element */
+        color_layer=document.getElementById("color_layer");
+        box_ctx = color_layer.getContext("2d");
+        color_layer.style.visibility="visible";
+        box_ctx.clearRect(0,0,color_layer.width,color_layer.height);
+        hratio = colorMap.height/tmp_layer.height;
+        wratio = colorMap.width/tmp_layer.width;
+        box_ctx.drawImage(colorMap,currX*wratio-5, currY*hratio-5, 10, 10, 0, 0, color_layer.width, color_layer.height);
+        break;
+      case "fill":
+        break;
+      case "rect_3":
+        attUndoList.push(att_ctx.getImageData(0,0,img_width,img_height));
+
+        tmp_ctx.clearRect(0,0,tmp_layer.width,tmp_layer.height);
+        recWidth = currX-prevX;
+        recHeight = currY-prevY;
+        startingX = attendX-recWidth/2;
+        startingY = attendY-recHeight/2;
+        hratio = colorMap.height/tmp_layer.height;
+        wratio = colorMap.width/tmp_layer.width;
+        att_ctx.globalCompositeOperation = "source-atop";
+        att_ctx.drawImage(colorMap,startingX*wratio,startingY*hratio,recWidth*wratio,recHeight*hratio,prevX,prevY,recWidth,recHeight);
+        att_ctx.globalCompositeOperation = "source-over";
+        /* display region in colormap element */
+        reg_layer=document.getElementById("region_layer");
+        sm_ctx = reg_layer.getContext("2d");
+        sm_ctx.clearRect(0,0,reg_layer.width,reg_layer.height);
+        sm_ctx.strokeStyle="red";
+        sm_ctx.strokeRect(startingX/3,startingY/3,recWidth/3,recHeight/3);
+
+        change_flag=true;
+        break;
+      case "brush_3":
+        attUndoList.push(att_ctx.getImageData(0,0,img_width,img_height));
+
+        pathWidth = lineHx-lineLx+2*lineWidth;
+        pathHeight = lineHy-lineLy+2*lineWidth;
+        startingX = attendX-pathWidth/2;
+        startingY = attendY-pathHeight/2;
+        hratio = colorMap.height/tmp_layer.height;
+        wratio = colorMap.width/tmp_layer.width;
+        tmp_ctx.globalCompositeOperation = "source-in";
+        tmp_ctx.drawImage(colorMap,startingX*wratio,startingY*hratio,pathWidth*wratio,pathHeight*hratio,lineLx-lineWidth,lineLy-lineWidth,pathWidth,pathHeight);
+        tmp_ctx.globalCompositeOperation = "source-over";
+        att_ctx.globalCompositeOperation = "source-atop";
+        att_ctx.drawImage(tmp_layer,0,0);
+        tmp_ctx.clearRect(0,0,tmp_layer.width,tmp_layer.height);
+        att_ctx.globalCompositeOperation = "source-over";
+        /* display region in colormap element */
+        reg_layer=document.getElementById("region_layer");
+        sm_ctx = reg_layer.getContext("2d");
+        sm_ctx.clearRect(0,0,reg_layer.width,reg_layer.height);
+        sm_ctx.strokeStyle="red";
+        sm_ctx.strokeRect(startingX/3,startingY/3,pathWidth/3,pathHeight/3);
+        
+        change_flag=true;
+        break;
+      default:
+        maskUndoList.push(cnv_ctx.getImageData(0,0,img_width,img_height));
+        cnv_ctx.drawImage(tmp_layer,0,0);
+        tmp_ctx.clearRect(0,0,tmp_layer.width,tmp_layer.height);
+        change_flag=true;
+    }
   }
 }
 function drawLine() {
@@ -348,6 +386,11 @@ function drawLine() {
   tmp_ctx.closePath();
 }
 
+function undodo(){
+  if(maskUndoList.length>0){
+    cnv_ctx.putImageData(maskUndoList.pop(),0,0);
+  }
+}
 function recrec() {
   tool="rect";
   document.getElementById("brushBtn").disabled=false;
@@ -360,6 +403,11 @@ function brusrush(n) {
   document.getElementById("brushBtn").disabled=true;
 }
 
+function undodo_3(){
+  if(attUndoList.length>0){
+    att_ctx.putImageData(attUndoList.pop(),0,0);
+  }
+}
 function pickicker() {
   tool="picker";
   document.getElementById("pickerBtn").disabled=true;
@@ -485,17 +533,6 @@ function fillInpaintingArea(maskData,paletteData,attData,sx,sy, traverseData){
 }
 function computeIndex(sx,sy,swidth){
   return (sx+sy*swidth)*4;
-}
-var flag=false;
-function toggleBackground(){
-  flag=!flag;
-  if(flag){
-    document.getElementById("img_layer").style.visibility="hidden";
-    document.getElementById("tmp_layer").style.visibility="hidden";
-  }else{
-    document.getElementById("img_layer").style.visibility="visible";
-    document.getElementById("tmp_layer").style.visibility="visible";
-  }
 }
 
 //어플리케이션 시작
