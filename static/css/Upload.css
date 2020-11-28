@@ -24,12 +24,17 @@ button {
 	font-family: 'Quicksand';
     font-size: 1.2em;
     padding: 5px 8px 5px 8px;
-    margin: 2px;
+    margin: 5px;
     border: 2px solid gray;
     border-radius: 8px;
     background-color: white;
 }
-
+#convertBtn {
+    width: 48%;
+}
+#step3Components {
+    max-height: 400px;
+}
 /* brush size selector */
 #brushsize {
     position: relative;
@@ -78,7 +83,7 @@ button {
 /*color map display */
 #mapContainer {
     position: relative;
-    margin-top: 100px;
+    margin-top: auto;
 }
 #palContainer {
     position: relative;
