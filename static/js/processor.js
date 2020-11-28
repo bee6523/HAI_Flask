@@ -82,6 +82,8 @@ function startAttending(){
   document.getElementById("result_layer").style.visibility="visible";
   result_ctx.clearRect(0,0,img_width,img_height);
   result_ctx.drawImage(loadImage,img_width/2-50,img_height/2-50,100,100);
+
+  document.getElementById("convertBtn").disabled=true;
   
   mask=convertToMask();
   formData = new FormData();
@@ -110,7 +112,7 @@ function showResult(){
     if(change_flag == false){
       document.getElementById("result_layer").style.visibility="visible";
       $('#convertBtn').html("Modulate");
-      $('#convertBtn').show();
+      document.getElementById("convertBtn").disabled=false;
       showingResult=true;
       return;
     }
@@ -121,6 +123,8 @@ function showResult(){
     document.getElementById("result_layer").style.visibility="visible";
     result_ctx.clearRect(0,0,img_width,img_height);
     result_ctx.drawImage(loadImage,img_width/2-50,img_height/2-50,100,100);
+
+    document.getElementById("convertBtn").disabled=true;
 
     mask=convertToMask();
     attention=convertToAttImage();
@@ -151,7 +155,7 @@ function callback_getAttention(response){
     change_flag=false;
     attUndoList=[];
     $('#convertBtn').html("Modulate");
-    $('#convertBtn').show();
+    document.getElementById("convertBtn").disabled=false;
   });
   att_tmp.addEventListener("load",(evt)=>{
     console.log(att_ctx.globalCompositeOperation);
@@ -173,6 +177,7 @@ function callback_getResult(response){
     change_flag=false;
     result_ctx.drawImage(result_image,0,0,img_width,img_height);
     $('#convertBtn').html("Modulate");
+    document.getElementById("convertBtn").disabled=false;
   });
   result_image.src=response + "?t=" + new Date().getTime();
 }
