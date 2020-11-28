@@ -7,7 +7,8 @@ var image_file, image, colorMap, loadImage,
   result_layer, result_ctx,
   prevX,prevY,
   currX,currY,
-  attendX,attendY,
+  attendlX,attendlY,
+  attendrX,attendrY,
   lineLx, lineLy,
   lineHx, lineHy;
 var showingResult=true; //true if displaying result, false if modulating phase
@@ -262,19 +263,14 @@ function doDraw(e){
         tmp_ctx.clearRect(0,0,tmp_layer.width,tmp_layer.height);
         currX=e.layerX;
         currY=e.layerY;
-        tmp_ctx.beginPath();
-        tmp_ctx.arc(currX,currY,10,0,Math.PI*2,false);
-        tmp_ctx.arc(currX,currY,7,Math.PI*2,0,true);
-        tmp_ctx.fillStyle="red";
-        tmp_ctx.fill();
+        tmp_ctx.setLineDash([4, 4]);
+        tmp_ctx.strokeRect(prevX,prevY,currX-prevX,currY-prevY);
+        /* display attention region in colormap element */
         marker_layer=document.getElementById("marker_layer");
         sm_ctx = marker_layer.getContext("2d");
         sm_ctx.clearRect(0,0,marker_layer.width,marker_layer.height);
-        sm_ctx.beginPath();
-        sm_ctx.arc(currX/3,currY/3,5,0,Math.PI*2,false);
-        sm_ctx.arc(currX/3,currY/3,3,Math.PI*2,0,true);
-        sm_ctx.fillStyle="red";
-        sm_ctx.fill();
+        sm_ctx.strokeStyle="red";
+        sm_ctx.strokeRect(prevX/3,prevY/3,(currX-prevX)/3,(currY-prevY)/3);
         break;
       case "rect_3":
         color_layer=document.getElementById("color_layer");
@@ -321,16 +317,17 @@ function endDraw(e){
     draw_flag=false;
     switch(tool){
       case "picker":
-        attendX=currX;
-        attendY=currY;
+        attendlX=prevX;
+        attendlY=prevY;
+        attendrX=currX;
+        attendrY=currY;
         /* display color preview in colormap element */
         color_layer=document.getElementById("color_layer");
         box_ctx = color_layer.getContext("2d");
-        color_layer.style.visibility="visible";
         box_ctx.clearRect(0,0,color_layer.width,color_layer.height);
         hratio = colorMap.height/tmp_layer.height;
         wratio = colorMap.width/tmp_layer.width;
-        box_ctx.drawImage(colorMap,currX*wratio-5, currY*hratio-5, 10, 10, 0, 0, color_layer.width, color_layer.height);
+        box_ctx.drawImage(colorMap,(prevX+currX)/2*wratio-5, (prevY+currY)/2*hratio-5, 10, 10, 0, 0, color_layer.width, color_layer.height);
         break;
       case "fill":
         break;
@@ -340,19 +337,11 @@ function endDraw(e){
         tmp_ctx.clearRect(0,0,tmp_layer.width,tmp_layer.height);
         recWidth = currX-prevX;
         recHeight = currY-prevY;
-        startingX = attendX-recWidth/2;
-        startingY = attendY-recHeight/2;
         hratio = colorMap.height/tmp_layer.height;
         wratio = colorMap.width/tmp_layer.width;
         att_ctx.globalCompositeOperation = "source-atop";
-        att_ctx.drawImage(colorMap,startingX*wratio,startingY*hratio,recWidth*wratio,recHeight*hratio,prevX,prevY,recWidth,recHeight);
+        att_ctx.drawImage(colorMap,attendlX*wratio,attendlY*hratio,(attendrX-attendlX)*wratio,(attendrY-attendlY)*hratio,prevX,prevY,recWidth,recHeight);
         att_ctx.globalCompositeOperation = "source-over";
-        /* display region in colormap element */
-        reg_layer=document.getElementById("region_layer");
-        sm_ctx = reg_layer.getContext("2d");
-        sm_ctx.clearRect(0,0,reg_layer.width,reg_layer.height);
-        sm_ctx.strokeStyle="red";
-        sm_ctx.strokeRect(startingX/3,startingY/3,recWidth/3,recHeight/3);
 
         change_flag=true;
         break;
@@ -361,23 +350,15 @@ function endDraw(e){
 
         pathWidth = lineHx-lineLx+2*lineWidth;
         pathHeight = lineHy-lineLy+2*lineWidth;
-        startingX = attendX-pathWidth/2;
-        startingY = attendY-pathHeight/2;
         hratio = colorMap.height/tmp_layer.height;
         wratio = colorMap.width/tmp_layer.width;
         tmp_ctx.globalCompositeOperation = "source-in";
-        tmp_ctx.drawImage(colorMap,startingX*wratio,startingY*hratio,pathWidth*wratio,pathHeight*hratio,lineLx-lineWidth,lineLy-lineWidth,pathWidth,pathHeight);
+        tmp_ctx.drawImage(colorMap,attendlX*wratio,attendlY*hratio,(attendrX-attendlX)*wratio,(attendrY-attendlY)*hratio,lineLx-lineWidth,lineLy-lineWidth,pathWidth,pathHeight);
         tmp_ctx.globalCompositeOperation = "source-over";
         att_ctx.globalCompositeOperation = "source-atop";
         att_ctx.drawImage(tmp_layer,0,0);
         tmp_ctx.clearRect(0,0,tmp_layer.width,tmp_layer.height);
         att_ctx.globalCompositeOperation = "source-over";
-        /* display region in colormap element */
-        reg_layer=document.getElementById("region_layer");
-        sm_ctx = reg_layer.getContext("2d");
-        sm_ctx.clearRect(0,0,reg_layer.width,reg_layer.height);
-        sm_ctx.strokeStyle="red";
-        sm_ctx.strokeRect(startingX/3,startingY/3,pathWidth/3,pathHeight/3);
         
         change_flag=true;
         break;
