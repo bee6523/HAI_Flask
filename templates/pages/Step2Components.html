@@ -5,16 +5,16 @@
   </head>
   <body id="step2Components">
     <div id="maskingGadgets">
-      <li><button id="rectBtn" onClick="recrec()" disabled=true><i class="fas fa-vector-square"></i></button></li>
-      <li><div id="brushsize"><button id="brushBtn">
+      <li><button id="rectBtn" class="toolBtn" onClick="recrec()" disabled=true><i class="fas fa-vector-square"></i></button></li>
+      <li><div id="brushsize"><button id="brushBtn" class="toolBtn">
         <i class="fas fa-paint-brush"></i></button>
-        <div id="sizeselector">
-          <button onClick="brusrush(5)"><span class="dot dot5"></span><br>5</button>
-          <button onClick="brusrush(10)"><span class="dot dot10"></span><br>10</button>
-          <button onClick="brusrush(25)"><span class="dot dot25"></span><br>25</button>
+        <div id="sizeselector" class="toolBtn">
+          <button class="sizeBtn" onClick="brusrush(10)"><span class="dot dot10"></span><br>10</button>
+          <button class="sizeBtn" onClick="brusrush(20)"><span class="dot dot20"></span><br>20</button>
+          <button class="sizeBtn" onClick="brusrush(25)"><span class="dot dot25"></span><br>25</button>
         </div>
       </div></li>
-      <li><button id="undo3Btn" onClick="undodo()"><i class="fas fa-undo"></i></button></li>
+      <li><button id="undoBtn" class="toolBtn" onClick="undodo()"><i class="fas fa-undo"></i></button></li>
     </div>
   <!-- <script type="text/javascript" src="{{url_for('static', filename = 'js/processor.js')}}"></script> -->
   </body>

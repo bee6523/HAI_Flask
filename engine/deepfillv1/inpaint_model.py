@@ -337,7 +337,6 @@ class InpaintCAModel(Model):
             config=None)
         batch_predict = x2
         
-        flow = resize(flow, scale=int(x1.shape[1]//flow.shape[1]), func=tf.image.resize_nearest_neighbor)
         print(f'Shape of coarse output: {x1.shape}')
         print(f'Shape of fine output: {x2.shape}')
         print(f'Shape of attention values: {att.shape}')
@@ -353,7 +352,8 @@ class InpaintCAModel(Model):
         fine_output = batch_fine*masks + batch_incomplete*(1-masks)
         
         # return tensors
-        batch_ret = tf.concat([batch_complete, coarse_output, fine_output, flow], axis=2)
+        batch_ret = tf.concat([batch_complete, coarse_output, fine_output], axis=2)
+        batch_flow = flow
         batch_att = att
         
-        return batch_ret, batch_att
+        return batch_ret, batch_flow, batch_att
