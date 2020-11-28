@@ -263,6 +263,8 @@ function doDraw(e){
         tmp_ctx.clearRect(0,0,tmp_layer.width,tmp_layer.height);
         currX=e.layerX;
         currY=e.layerY;
+        tmp_ctx.lineWidth=1;
+        tmp_ctx.strokeStyle="black";
         tmp_ctx.setLineDash([4, 4]);
         tmp_ctx.strokeRect(prevX,prevY,currX-prevX,currY-prevY);
         /* display attention region in colormap element */
