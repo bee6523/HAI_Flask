@@ -42,16 +42,18 @@ let processor = {
           image = new Image();
           image.addEventListener("load",(evt)=>{
             ratio=image.height/image.width;
-            if(ratio>(400/550)){
+            if(ratio>(400/560)){
               img_width=parseInt(400/ratio);
               img_height=400;
             }else{
-              img_width=550;
-              img_height=parseInt(550*ratio);
+              img_width=560;
+              img_height=parseInt(560*ratio);
             }
-            img_layer.width=cnv_layer.width=tmp_layer.width=result_layer.width=img_width;
-            img_layer.height=cnv_layer.height=tmp_layer.height=result_layer.height=img_height;
+            img_layer.width=cnv_layer.width=tmp_layer.width=result_layer.width=parseInt(img_width/8)*8;
+            img_layer.height=cnv_layer.height=tmp_layer.height=result_layer.height=parseInt(img_height/8)*8;
             img_ctx.drawImage(image,0,0,img_width,img_height);
+            img_width = parseInt(img_width/8)*8;
+            img_height = parseInt(img_height/8)*8;
           });
           image.src=window.URL.createObjectURL(image_file);
           $('#nextBtn').show();
@@ -219,6 +221,13 @@ function initDraw(e){
     lineHx=currX;
     lineHy=currY;
   }
+  else if (tool=="rect"){
+    draw_flag=true;
+    currX = parseInt(e.layerX/8)*8;
+    currY = parseInt(e.layerY/8)*8;
+    prevX=currX;
+    prevY=currY;
+  }
   else{
     draw_flag=true;
     currX = e.layerX;
@@ -239,8 +248,8 @@ function doDraw(e){
         break;
       case "rect":
         tmp_ctx.clearRect(prevX,prevY,currX-prevX,currY-prevY);
-        currX=e.layerX;
-        currY=e.layerY;
+        currX=parseInt(e.layerX/8)*8;
+        currY=parseInt(e.layerY/8)*8;
         tmp_ctx.fillStyle="white";
         tmp_ctx.fillRect(prevX,prevY,currX-prevX,currY-prevY);
         break;
