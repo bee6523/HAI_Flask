@@ -227,7 +227,7 @@ function initDraw(e){
     lineHx=currX;
     lineHy=currY;
   }
-  else if (tool=="rect"){
+  else if (tool=="rect" || tool=="rect_3"){
     draw_flag=true;
     currX = parseInt(e.layerX/8)*8;
     currY = parseInt(e.layerY/8)*8;
@@ -281,8 +281,8 @@ function doDraw(e){
         [r, g, b, a] = pixData.data;
         if ([r,g,b,a]!=[0,0,0,0]) {
           tmp_ctx.clearRect(prevX,prevY,currX-prevX,currY-prevY);
-          currX=e.layerX;
-          currY=e.layerY;
+          currX=parseInt(e.layerX/8)*8;
+          currY=parseInt(e.layerY/8)*8;
           tmp_ctx.fillStyle=`rgba(${r},${g},${b},${a/255})`;
           tmp_ctx.fillRect(prevX,prevY,currX-prevX,currY-prevY);
         }
