@@ -37,6 +37,7 @@ var app = Sammy(function () {
         $("#prevBtn").hide();
         $("#convertBtn").hide();
         $("#restartBtn").show();
+        $("#downloadBtn").show();
     });
 
     this.get("#/param/:id", function () {

@@ -29,6 +29,17 @@ button {
     border-radius: 8px;
     background-color: white;
 }
+
+#downloadBtn {
+	font-family: 'Quicksand';
+    font-size: 1.2em;
+    padding: 5px 8px 5px 8px;
+    margin: 5px;
+    border: 2px solid gray;
+    border-radius: 8px;
+    background-color: white;
+}
+
 #convertBtn {
     width: 48%;
 }

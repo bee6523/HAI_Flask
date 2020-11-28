@@ -75,6 +75,7 @@ function startAttending(){
   console.log(change_flag)
   att_layer.style.visibility="visible";
   if(change_flag == false){
+    document.getElementById("convertBtn").disabled=false;
     if(showingResult){
       document.getElementById("result_layer").style.visibility="visible";
     }
@@ -547,6 +548,11 @@ function fillInpaintingArea(maskData,paletteData,attData,sx,sy, traverseData){
 }
 function computeIndex(sx,sy,swidth){
   return (sx+sy*swidth)*4;
+}
+
+function downloadResultImage(el){
+  el.href=result_layer.toDataURL("image/png");
+  el.download = "result.png";
 }
 
 //어플리케이션 시작
