@@ -368,11 +368,9 @@ def contextual_attention(f, b, mask=None, in_att=None, ksize=3, stride=1, rate=1
         else:
             print('Use modulated attention')
             #ai *= mm  # mask
-            
             offset = tf.argmax(ai, axis=3, output_type=tf.int32)
             offset = tf.stack([offset // fs[2], offset % fs[2]], axis=-1)
             offsets.append(offset)
-            
             att.append(ai)
             yi = tf.nn.conv2d_transpose(ai, wi_center, tf.concat([[1], raw_fs[1:]], axis=0), strides=[1,rate,rate,1]) / 4.
             print(f'[{idx+1}/{len(f_groups)}]: Shape of attention coefficients {ai.shape}')
