@@ -5,7 +5,7 @@
     <!-- <script type="text/javascript" src="{{url_for('static', filename = 'js/processor.js')}}"></script> -->
   </head>
   <body id="step3Components">
-    <div id="attendingGadgets">
+    <div id="attendingGadgets" hidden>
       <li><button id="pickerBtn" class="toolBtn" onClick="pickicker()" disabled=true><i class="fas fa-eye-dropper"></i></button></li>
       <!-- <li><button id="fillBtn" class="toolBtn" onClick="fillill()"><i class="fas fa-fill"></i></button></li> -->
       <li><button id="rect3Btn" class="toolBtn" onClick="rectect()"><i class="fas fa-vector-square"></i></button></li>
@@ -19,13 +19,13 @@
       </div></li>
       <li><button id="undo3Btn" class="toolBtn" onClick="undodo_3()"><i class="fas fa-undo"></i></button></li>
     </div>
-    <div id="mapContainer">
+    <div id="mapContainer" hidden>
       <div id="markContainer"><canvas id="color_layer" width="20" height="20"></canvas></div>
       <div id="palContainer">
         <canvas id="colorpalette" width="100" height="80"></canvas>
         <canvas id="marker_layer" width="100" height="80"></canvas>
         <canvas id="region_layer" width="100" height="80"></canvas>
-        <script> tool="picker"; palettesize() </script>
+        <script> palettesize() </script>
       </div>
     </div>
   </body>

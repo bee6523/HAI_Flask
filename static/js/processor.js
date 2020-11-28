@@ -105,19 +105,24 @@ function startAttending(){
       success: callback_getAttention
   });
   console.log("sent initial mask");
-  tool="picker";
+  tool="null";
 }
 
 function showResult(){
   if(showingResult){
     document.getElementById("result_layer").style.visibility="hidden";
     $('#convertBtn').html("Convert");
+    $('#attendingGadgets').show();
+    $('#mapContainer').show();
+    tool="picker";
     showingResult=false;
   }else{
     if(change_flag == false){
       document.getElementById("result_layer").style.visibility="visible";
       $('#convertBtn').html("Modulate");
       document.getElementById("convertBtn").disabled=false;
+      $('#attendingGadgets').hide();
+      $('#mapContainer').hide();
       showingResult=true;
       return;
     }
@@ -130,6 +135,8 @@ function showResult(){
     result_ctx.drawImage(loadImage,img_width/2-50,img_height/2-50,100,100);
 
     document.getElementById("convertBtn").disabled=true;
+    $('#attendingGadgets').hide();
+    $('#mapContainer').hide();
 
     mask=convertToMask();
     attention=convertToAttImage();
@@ -410,10 +417,11 @@ function undodo_3(){
 function pickicker() {
   tool="picker";
   document.getElementById("pickerBtn").disabled=true;
-  document.getElementById("fillBtn").disabled=false;
+  /*document.getElementById("fillBtn").disabled=false;*/
   document.getElementById("rect3Btn").disabled=false;
   document.getElementById("brush3Btn").disabled=false;
 }
+/*
 function fillill() {
   tool="fill";
   document.getElementById("pickerBtn").disabled=false;
@@ -421,10 +429,11 @@ function fillill() {
   document.getElementById("rect3Btn").disabled=false;
   document.getElementById("brush3Btn").disabled=false;
 }
+*/
 function rectect() {
   tool="rect_3";
   document.getElementById("pickerBtn").disabled=false;
-  document.getElementById("fillBtn").disabled=false;
+  /*document.getElementById("fillBtn").disabled=false;*/
   document.getElementById("rect3Btn").disabled=true;
   document.getElementById("brush3Btn").disabled=false;
 
@@ -433,7 +442,7 @@ function brusrush_3(n) {
   tool="brush_3";
   lineWidth=n;
   document.getElementById("pickerBtn").disabled=false;
-  document.getElementById("fillBtn").disabled=false;
+  /*document.getElementById("fillBtn").disabled=false;*/
   document.getElementById("rect3Btn").disabled=false;
   document.getElementById("brush3Btn").disabled=true;
 }

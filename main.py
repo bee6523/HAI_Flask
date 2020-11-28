@@ -29,6 +29,10 @@ def Step2Comp():
 def Step3Comp():
     return render_template("/pages/Step3Components.html")
 
+@app.route('/pages/Step4Components.html')
+def Step4Comp():
+    return render_template("/pages/Step4Components.html")
+
 @app.route('/InitResult', methods=['POST'])
 def example_function():
     img_file=request.form['img']

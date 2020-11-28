@@ -2,6 +2,8 @@
     width: 560px;
     height: 400px;
     position: relative;
+    text-align: center;
+    justify-content: center;
 }
 #img_layer, #canvas_layer, #att_layer, #tmp_layer, #result_layer {
     position: absolute;
@@ -31,7 +33,7 @@
 }
 
 #convertBtn {
-    width: 48%;
+    width: 47%;
 }
 .toolBtn {
 	font-family: 'Quicksand';
@@ -101,7 +103,7 @@
 /*color map display */
 #mapContainer {
     position: relative;
-    margin-top: 15px;
+    margin-top: 50px;
 }
 #palContainer {
     position: relative;
@@ -128,3 +130,25 @@
     right: 0;
 }
 #color_layer { z-index:2; }
+
+/* Step4 */
+#downloadGadgets {
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.step4Btn {
+	font-family: 'Quicksand';
+    font-size: 1.2em;
+    padding: 5px 8px 5px 8px;
+    margin: 5px;
+    border: 2px solid gray;
+    border-radius: 8px;
+    background-color: white;
+    width: 100%;
+}
+#downloadBtn a {
+    text-decoration: none;
+}

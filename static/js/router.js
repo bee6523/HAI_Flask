@@ -4,10 +4,15 @@ var app = Sammy(function () {
  
     this.get("#/", function () {
         //인덱스 페이지
-        $("#prevBtn").hide();
-        $("#restartBtn").hide();
         $("#stepInfo").text("Step1: Upload your image");
         $("#mainDiv").load("/pages/Upload.html");
+    });
+
+    this.get("#/step1", function (context) {
+        $("#stepInfo").text("Step1: Upload your image");
+        $("#userUploadedImage").show();
+        $("#prevBtn").hide();
+        $("#toolBox").hide();
     });
  
     this.get("#/step2", function () {
@@ -16,6 +21,7 @@ var app = Sammy(function () {
         $("#userUploadedImage").hide();
         $("#stepInfo").text("Step2: Mask your image");
         $("#prevBtn").show();
+        $("#toolBox").show();
         $("#toolBox").load("./pages/Step2Components.html");
     });
 
@@ -32,12 +38,10 @@ var app = Sammy(function () {
         //do display
         $("#stepInfo").text("Step4: See the result");
         $('#result_layer').css("visibility","visible");
-        $("#step3Components").hide();
+        $("#toolBox").load("./pages/Step4Components.html");
         $("#nextBtn").hide();
         $("#prevBtn").hide();
         $("#convertBtn").hide();
-        $("#restartBtn").show();
-        $("#downloadBtn").show();
     });
 
     this.get("#/param/:id", function () {
@@ -51,5 +55,5 @@ var app = Sammy(function () {
  
 //어플리케이션 시작
 $(function () {
-    app.run('#/')
+    app.run('#/');
 });
