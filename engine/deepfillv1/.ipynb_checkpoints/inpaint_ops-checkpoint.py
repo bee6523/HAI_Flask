@@ -367,7 +367,7 @@ def contextual_attention(f, b, mask=None, in_att=None, ksize=3, stride=1, rate=1
             print(f'[{idx+1}/{len(f_groups)}]: Shape of patch center features {wi_center.shape}')
         else:
             print('Use modulated attention')
-            ai *= mm  # mask
+            #ai *= mm  # mask
             
             offset = tf.argmax(ai, axis=3, output_type=tf.int32)
             offset = tf.stack([offset // fs[2], offset % fs[2]], axis=-1)

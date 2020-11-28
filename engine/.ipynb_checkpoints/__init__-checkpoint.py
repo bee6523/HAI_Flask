@@ -1,19 +1,17 @@
 import os
-
 from matplotlib import pyplot as plt
 import cv2
-
 import numpy as np
 import tensorflow as tf
-tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)  # will suppress all warnings
-
+#tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)  # will suppress all warnings
 import neuralgym as ng
-from deepfillv1.inpaint_model import InpaintCAModel
-from deepfillv1.inpaint_ops import flow_to_image_tf
-from utils import Namespace, get_colormap_image, reverse_map
+from .deepfillv1.inpaint_model import InpaintCAModel
+from .deepfillv1.inpaint_ops import flow_to_image_tf
+from .utils import Namespace, get_colormap_image, reverse_map
 
 
 #ng.get_gpus(1)
+GRID = 8
 
 
 def get_ref_colormap(width, height, out_path='colorpalette.jpg'):
@@ -33,18 +31,24 @@ def get_ref_colormap(width, height, out_path='colorpalette.jpg'):
     return colormap
 
 
-def inpaint(image_path, mask_path, out_image_path, out_att_path, checkpoint_dir='deepfillv1/model_logs'):
+def inpaint(image_path, mask_path, out_image_path, out_att_path, checkpoint_dir='./engine/deepfillv1/model_logs'):
     tf.reset_default_graph()
     model = InpaintCAModel()
     image = cv2.imread(image_path)
     mask = cv2.imread(mask_path)
-    assert image.shape == mask.shape
     h, w, _ = image.shape
-    grid = 8
-    
-    image = image[:h//grid*grid, :w//grid*grid, :]
-    mask = mask[:h//grid*grid, :w//grid*grid, :]
+    if not (h//GRID*GRID == h and w//GRID*GRID == w):
+        print(f"WARNING: image not on grid: do something like image = image[:h//{GRID}*{GRID}, :w//{GRID}*{GRID}, :]")
+        image = image[:h//GRID*GRID, :w//GRID*GRID, :]
+        mask = mask[:h//GRID*GRID, :w//GRID*GRID, :]
+        h, w, _ = image.shape
+    assert image.shape == mask.shape
     print('Shape of image: {}'.format(image.shape))
+    
+    mask_ds = cv2.resize(mask, dsize=(w//GRID, h//GRID), interpolation=cv2.INTER_NEAREST)
+    mask = cv2.resize(mask_ds, dsize=(w, h), interpolation=cv2.INTER_NEAREST)
+    print('Shape of quantized mask: {}'.format(mask.shape))
+    
     image = np.expand_dims(image, 0)
     mask = np.expand_dims(mask, 0)
     input_image = np.concatenate([image, mask], axis=2)
@@ -54,7 +58,7 @@ def inpaint(image_path, mask_path, out_image_path, out_att_path, checkpoint_dir=
     sess_config.gpu_options.allow_growth = True
     with tf.Session(config=sess_config) as sess:
         input_image = tf.constant(input_image, dtype=tf.float32)
-        output, attention = model.build_server_graph(input_image)
+        output, _ = model.build_server_graph(input_image)
         output = (output + 1.) * 127.5
         output = tf.reverse(output, [-1])
         output = tf.saturate_cast(output, tf.uint8)
@@ -81,37 +85,39 @@ def inpaint(image_path, mask_path, out_image_path, out_att_path, checkpoint_dir=
     return out_image, out_flow
 
 
-def controlled_inpaint(image_path, mask_path, att_path, out_image_path, checkpoint_dir='deepfillv1/model_logs'):
+def controlled_inpaint(image_path, mask_path, att_path, out_image_path, checkpoint_dir='./engine/deepfillv1/model_logs'):
     tf.reset_default_graph()
     model = InpaintCAModel()
     image = cv2.imread(image_path)
     mask = cv2.imread(mask_path)
     flow = cv2.imread(att_path)
-    assert image.shape == mask.shape == flow.shape
-    
     h, w, _ = image.shape
-    grid = 8
-    image = image[:h//grid*grid, :w//grid*grid, :]
-    mask = mask[:h//grid*grid, :w//grid*grid, :]
+    if not (h//GRID*GRID == h and w//GRID*GRID == w):
+        print(f"WARNING: image not on grid: do something like image = image[:h//{GRID}*{GRID}, :w//{GRID}*{GRID}, :]")
+        image = image[:h//GRID*GRID, :w//GRID*GRID, :]
+        mask = mask[:h//GRID*GRID, :w//GRID*GRID, :]
+        flow = flow[:h//GRID*GRID, :w//GRID*GRID, :]
+        h, w, _ = image.shape
+    assert image.shape == mask.shape == flow.shape
     print('Shape of image: {}'.format(image.shape))
-    image = np.expand_dims(image, 0)
-    mask = np.expand_dims(mask, 0)
+    
+    mask_ds = cv2.resize(mask, dsize=(w//GRID, h//GRID), interpolation=cv2.INTER_NEAREST)
+    mask = cv2.resize(mask_ds, dsize=(w, h), interpolation=cv2.INTER_NEAREST)
+    print('Shape of quantized mask: {}'.format(mask.shape))
+    print('Shape of control flow: {}'.format(flow.shape))
+    
+    image, mask, input_flow = np.expand_dims(image, 0), np.expand_dims(mask, 0), np.expand_dims(flow, 0)
     input_image = np.concatenate([image, mask], axis=2)
     print('Shape of model input: {}'.format(input_image.shape))
-    flow = flow[:h//grid*grid, :w//grid*grid, :]
-    input_flow = np.expand_dims(flow, 0)
-    print('Shape of att colormap input: {}'.format(input_flow.shape))
     
-    dratio = 8
-    dw, dh = w//dratio, h//dratio
-    mask_downsampled = cv2.resize(mask[0][..., -1], dsize=(dw, dh), interpolation=cv2.INTER_NEAREST)
-    flow_downsampled = cv2.resize(input_flow[0], dsize=(dw, dh), interpolation=cv2.INTER_NEAREST)
+    mask_downsampled = cv2.resize(mask[0][..., -1], dsize=(w//GRID, h//GRID), interpolation=cv2.INTER_NEAREST)
+    flow_downsampled = cv2.resize(input_flow[0], dsize=(w//GRID, h//GRID), interpolation=cv2.INTER_NEAREST)
     
     # get reference colormap
     sess_config = tf.ConfigProto()
     sess_config.gpu_options.allow_growth = True
     with tf.Session(config=sess_config) as sess:
-        colormap = get_colormap_image(dw, dh, dw, dh)
+        colormap = get_colormap_image(w//GRID, h//GRID, w//GRID, h//GRID)
         colormap = (colormap + 1.) * 127.5
         colormap = tf.reverse(colormap, [-1])
         colormap = tf.saturate_cast(colormap, tf.uint8)
