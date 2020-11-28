@@ -47,11 +47,14 @@ def example_function():
 
     cv2.imwrite(img_path,image)
     cv2.imwrite(mask_path,mask)
+    
+    cache = "./static/cache"
 
     inpaint(image_path=img_path,
             mask_path=mask_path,
             out_image_path=ret_path,
-            out_att_path=ret_att_path)
+            out_att_path=ret_att_path,
+            out_cache_path=cache)
     # no need to write output, inpaint already does this
     return ret_path+"&"+ret_att_path
 
@@ -77,9 +80,14 @@ def showAttendResult():
     cv2.imwrite(mask_path,mask)
     cv2.imwrite(att_path,att)
     
+    cache = "./static/cache.npy"
+    ref_att_path = "./static/input_att.png"
+    
     controlled_inpaint(image_path=img_path,
                        mask_path=mask_path,
                        att_path=att_path,
+                       cache_path=cache,
+                       ref_att_path=ref_att_path,
                        out_image_path=ret_path)
     # no need to write output, controlled_inpaint already does this
     # cv2.imwrite(ret_path,output)

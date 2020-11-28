@@ -31,7 +31,8 @@ def get_ref_colormap(width, height, out_path='colorpalette.jpg'):
     return colormap
 
 
-def inpaint(image_path, mask_path, out_image_path, out_att_path, checkpoint_dir='./engine/deepfillv1/model_logs'):
+def inpaint(image_path, mask_path, out_image_path, out_att_path,
+            out_cache_path, checkpoint_dir='./engine/deepfillv1/model_logs'):
     tf.reset_default_graph()
     model = InpaintCAModel()
     image = cv2.imread(image_path)
@@ -74,34 +75,42 @@ def inpaint(image_path, mask_path, out_image_path, out_att_path, checkpoint_dir=
             assign_ops.append(tf.assign(var, var_value))
         sess.run(assign_ops)
         print('Model loaded.')
-        result, flow = sess.run(output), sess.run(flow)
+        result, flow, attention= sess.run(output), sess.run(flow), sess.run(attention)
         result = np.array(result)
         result, coarse, fine = np.split(result, 3, axis=2)
         print('Shape of model output: {}'.format(result.shape))
         flow = np.array(flow)
         flow = cv2.resize(flow[0][:, :, ::-1], dsize=(w, h), interpolation=cv2.INTER_NEAREST)
         print('Shape of model attention (colored): {}'.format(flow.shape))
+        attention = np.array(attention)
+        print('Shape of model attention (raw): {}'.format(attention.shape))
     
     out_image = result[0][:, :, ::-1]
     out_flow = flow
     cv2.imwrite(out_image_path, out_image)
     cv2.imwrite(out_att_path, flow)
+    np.save(out_cache_path, attention)
     print('Done')
     return out_image, out_flow
 
 
-def controlled_inpaint(image_path, mask_path, att_path, out_image_path, checkpoint_dir='./engine/deepfillv1/model_logs'):
+def controlled_inpaint(image_path, mask_path, att_path,
+                       cache_path, ref_att_path,
+                       out_image_path, checkpoint_dir='./engine/deepfillv1/model_logs'):
     tf.reset_default_graph()
     model = InpaintCAModel()
     image = cv2.imread(image_path)
     mask = cv2.imread(mask_path)
     flow = cv2.imread(att_path)
+    ref_flow = cv2.imread(ref_att_path)
+    cached_attention = np.load(cache_path)
     h, w, _ = image.shape
     if not (h//GRID*GRID == h and w//GRID*GRID == w):
         print(f"WARNING: image not on grid: do something like image = image[:h//{GRID}*{GRID}, :w//{GRID}*{GRID}, :]")
         image = image[:h//GRID*GRID, :w//GRID*GRID, :]
         mask = mask[:h//GRID*GRID, :w//GRID*GRID, :]
         flow = flow[:h//GRID*GRID, :w//GRID*GRID, :]
+        ref_flow = ref_flow[:h//GRID*GRID, :w//GRID*GRID, :]
         h, w, _ = image.shape
     assert image.shape == mask.shape == flow.shape
     print('Shape of image: {}'.format(image.shape))
@@ -109,12 +118,18 @@ def controlled_inpaint(image_path, mask_path, att_path, out_image_path, checkpoi
     mask = cv2.resize(mask_ds, dsize=(w, h), interpolation=cv2.INTER_NEAREST)
     print('Shape of quantized mask: {}'.format(mask.shape))
     print('Shape of control flow: {}'.format(flow.shape))
-    image, mask, input_flow = np.expand_dims(image, 0), np.expand_dims(mask, 0), np.expand_dims(flow, 0)
+    image = np.expand_dims(image, 0)
+    mask = np.expand_dims(mask, 0)
     input_image = np.concatenate([image, mask], axis=2)
     print('Shape of model input: {}'.format(input_image.shape))
-    
     mask_downsampled = cv2.resize(mask[0][..., -1], dsize=(w//GRID, h//GRID), interpolation=cv2.INTER_NEAREST)
+    
+    # process attention images
+    input_flow = np.expand_dims(flow, 0)
+    ref_input_flow = np.expand_dims(ref_flow, 0)
     flow_downsampled = cv2.resize(input_flow[0], dsize=(w//GRID, h//GRID), interpolation=cv2.INTER_NEAREST)
+    ref_flow_downsampled = cv2.resize(ref_input_flow[0], dsize=(w//GRID, h//GRID), interpolation=cv2.INTER_NEAREST)
+    unchanged = np.abs((flow_downsampled - ref_flow_downsampled).mean(-1)) < 1
     
     # get reference colormap
     sess_config = tf.ConfigProto()
@@ -129,6 +144,9 @@ def controlled_inpaint(image_path, mask_path, att_path, out_image_path, checkpoi
     
     # convert colormap to attention values
     input_att = np.expand_dims(reverse_map(flow_downsampled[:, :, ::-1], colormap[0]), 0)
+    # for unchanged pixels, use original attention
+    input_att[0, unchanged, :] = cached_attention[0, unchanged, :]
+    
     print(f'Shape of att values: {input_att.shape}')
     
     input_image = np.ascontiguousarray(input_image)
