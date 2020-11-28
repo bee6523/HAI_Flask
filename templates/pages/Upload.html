@@ -15,11 +15,11 @@
       <canvas id="result_layer" width="560" height="400"></canvas>
     </div>
     <br>
-    <button id="convertBtn" hidden disabled=true onClick=showResult()>Modulate</button>
+    <button id="convertBtn" class="processBtn" hidden disabled=true onClick=showResult()>Modulate</button>
     <br>
-    <button id="prevBtn" hidden onClick=prev()>Previous step</button>
-    <button id="nextBtn" hidden onClick=next()>Next step</button>
-    <button id="restartBtn" hidden onClick="window.location.href = ''">Start again</button>
+    <button id="prevBtn" class="processBtn" hidden onClick=prev()>Previous step</button>
+    <button id="nextBtn" class="processBtn" hidden onClick=next()>Next step</button>
+    <button id="restartBtn" class="processBtn" hidden onClick="window.location.href = ''">Start again</button>
   <script type="text/javascript" src="{{url_for('static', filename = 'js/processor.js')}}"></script>
   </body>
 </html>
