@@ -44,11 +44,9 @@ def inpaint(image_path, mask_path, out_image_path, out_att_path, checkpoint_dir=
         h, w, _ = image.shape
     assert image.shape == mask.shape
     print('Shape of image: {}'.format(image.shape))
-    
     mask_ds = cv2.resize(mask, dsize=(w//GRID, h//GRID), interpolation=cv2.INTER_NEAREST)
     mask = cv2.resize(mask_ds, dsize=(w, h), interpolation=cv2.INTER_NEAREST)
     print('Shape of quantized mask: {}'.format(mask.shape))
-    
     image = np.expand_dims(image, 0)
     mask = np.expand_dims(mask, 0)
     input_image = np.concatenate([image, mask], axis=2)
@@ -58,10 +56,14 @@ def inpaint(image_path, mask_path, out_image_path, out_att_path, checkpoint_dir=
     sess_config.gpu_options.allow_growth = True
     with tf.Session(config=sess_config) as sess:
         input_image = tf.constant(input_image, dtype=tf.float32)
-        output, _ = model.build_server_graph(input_image)
-        output = (output + 1.) * 127.5
-        output = tf.reverse(output, [-1])
-        output = tf.saturate_cast(output, tf.uint8)
+        output, flow, attention = model.build_server_graph(input_image)
+        def toimg(t):
+            t = (t + 1.) * 127.5
+            t = tf.reverse(t, [-1])
+            t = tf.saturate_cast(t, tf.uint8)
+            return t
+        output = toimg(output)
+        flow = toimg(flow)
         # load pretrained model
         vars_list = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES)
         assign_ops = []
@@ -72,15 +74,18 @@ def inpaint(image_path, mask_path, out_image_path, out_att_path, checkpoint_dir=
             assign_ops.append(tf.assign(var, var_value))
         sess.run(assign_ops)
         print('Model loaded.')
-        result = sess.run(output)
-        print('Shape of model output: {}'.format(result.shape))
+        result, flow = sess.run(output), sess.run(flow)
         result = np.array(result)
-        result, coarse, fine, flow = np.split(result, 4, axis=2)
+        result, coarse, fine = np.split(result, 3, axis=2)
+        print('Shape of model output: {}'.format(result.shape))
+        flow = np.array(flow)
+        flow = cv2.resize(flow[0][:, :, ::-1], dsize=(w, h), interpolation=cv2.INTER_NEAREST)
+        print('Shape of model attention (colored): {}'.format(flow.shape))
     
     out_image = result[0][:, :, ::-1]
-    out_flow = flow[0][:, :, ::-1]
+    out_flow = flow
     cv2.imwrite(out_image_path, out_image)
-    cv2.imwrite(out_att_path, out_flow)
+    cv2.imwrite(out_att_path, flow)
     print('Done')
     return out_image, out_flow
 
@@ -100,12 +105,10 @@ def controlled_inpaint(image_path, mask_path, att_path, out_image_path, checkpoi
         h, w, _ = image.shape
     assert image.shape == mask.shape == flow.shape
     print('Shape of image: {}'.format(image.shape))
-    
     mask_ds = cv2.resize(mask, dsize=(w//GRID, h//GRID), interpolation=cv2.INTER_NEAREST)
     mask = cv2.resize(mask_ds, dsize=(w, h), interpolation=cv2.INTER_NEAREST)
     print('Shape of quantized mask: {}'.format(mask.shape))
     print('Shape of control flow: {}'.format(flow.shape))
-    
     image, mask, input_flow = np.expand_dims(image, 0), np.expand_dims(mask, 0), np.expand_dims(flow, 0)
     input_image = np.concatenate([image, mask], axis=2)
     print('Shape of model input: {}'.format(input_image.shape))
@@ -135,10 +138,14 @@ def controlled_inpaint(image_path, mask_path, att_path, out_image_path, checkpoi
     with tf.Session(config=sess_config) as sess:
         input_image = tf.constant(input_image, dtype=tf.float32)
         input_att = tf.constant(input_att, dtype=tf.float32)
-        output, attention = model.build_server_graph(input_image, input_att)
-        output = (output + 1.) * 127.5
-        output = tf.reverse(output, [-1])
-        output = tf.saturate_cast(output, tf.uint8)
+        output, flow, attention = model.build_server_graph(input_image, input_att)
+        def toimg(t):
+            t = (t + 1.) * 127.5
+            t = tf.reverse(t, [-1])
+            t = tf.saturate_cast(t, tf.uint8)
+            return t
+        output = toimg(output)
+        flow = toimg(flow)
         # load pretrained model
         vars_list = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES)
         assign_ops = []
@@ -149,13 +156,14 @@ def controlled_inpaint(image_path, mask_path, att_path, out_image_path, checkpoi
             assign_ops.append(tf.assign(var, var_value))
         sess.run(assign_ops)
         print('Model loaded.')
-        result = sess.run(output)
-        attention = sess.run(attention)
-        print('Shape of model output: {}'.format(result.shape))
-
+        result, flow = sess.run(output), sess.run(flow)
         result = np.array(result)
-        result, coarse, fine, flow = np.split(result, 4, axis=2)
-    
+        result, coarse, fine = np.split(result, 3, axis=2)
+        print('Shape of model output: {}'.format(result.shape))
+        flow = np.array(flow)
+        flow = cv2.resize(flow[0][:, :, ::-1], dsize=(w, h), interpolation=cv2.INTER_NEAREST)
+        print('Shape of model attention (colored): {}'.format(flow.shape))
+        
     out_image = result[0][:, :, ::-1]
     cv2.imwrite(out_image_path, out_image)
     print('Done')
