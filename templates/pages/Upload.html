@@ -14,11 +14,12 @@
       <canvas id="tmp_layer" width="550" height="400"></canvas>
       <canvas id="result_layer" width="550" height="400"></canvas>
     </div>
-    <br><br>
+    <br>
+    <button id="convertBtn" hidden disabled=true onClick=showResult()>Modulate</button>
+    <br>
     <button id="prevBtn" hidden onClick=prev()>Previous step</button>
     <button id="nextBtn" hidden onClick=next()>Next step</button>
     <button id="restartBtn" hidden onClick="window.location.href = ''">Start again</button>
-    <button id="convertBtn" hidden onClick=showResult()>convert</button>
   <script type="text/javascript" src="{{url_for('static', filename = 'js/processor.js')}}"></script>
   </body>
 </html>

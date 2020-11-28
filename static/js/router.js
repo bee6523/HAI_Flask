@@ -12,6 +12,7 @@ var app = Sammy(function () {
  
     this.get("#/step2", function () {
         startDrawing();
+        $("#convertBtn").hide();
         $("#userUploadedImage").hide();
         $("#stepInfo").text("Step2: Mask your image");
         $("#prevBtn").show();
@@ -19,6 +20,8 @@ var app = Sammy(function () {
     });
 
     this.get("#/step3", function () {
+        $("#convertBtn").show();
+        document.getElementById("convertBtn").disabled=true;
         startAttending();
         $("#stepInfo").text("Step3: Set reference region");
         $("#nextBtn").show();
