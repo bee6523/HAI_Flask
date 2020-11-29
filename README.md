@@ -73,50 +73,45 @@ Main javascript file that has functions for user modulation, model output reques
 
 In this section, we will further demonstrate how the image on the left can be inpainted to produce the image on the right.
 
-1. Upload an image.
+1. Upload an image. Press `Next Step` and add masks. You can try both square & free-form masks, but we recommend non-overlapping squares because underlying AI is trained that way.
 <div style="text-align:center">
 <img src="https://i.imgur.com/x5I95I1.jpg" width="500"/>
 </div>
-
-2. Press `Next Step` and add masks. You can try both square & free-form masks, but we recommend non-overlapping squares because underlying AI is trained that way.
 <div style="text-align:center">
 <img src="https://i.imgur.com/FmXkPha.png" width="500"/>
 </div>
 
-3. Press `Next Step`. An inpainted result by the AI will show up. You can stop here if you are satisfied.
+2. Press `Next Step`. An inpainted result by the AI will show up. You can stop here if you are satisfied.
 <div style="text-align:center">
 <img src="https://i.imgur.com/0MOJzHq.jpg" width="500"/>
 </div>
 
-4. If you want to *understand*, press `Modulate`. A colored map will be shown on top of the masks. *The colored map denotes where the AI looks at*. Specifically, each color denotes a position of a source pixel where the AI can draw information from. The *palatte* in the bottom-right corner provides the position-color mappings. For example, you can see the pink dots in the center of attention, and notice that inpainted image is having noise in that area. By comparing with color map, you can *understand* that AI is giving attention on bottom-left area(possiblly grass or sunflower) for that point, causing noise to appear.
+3. If you want to *understand*, press `Modulate`. A colored map will appear on top of the masks. *The colored map denotes where the AI looks at*.
+Specifically, each color denotes a source position where the AI draws information from. The *palatte* in the bottom-right corner provides the color-to-position mapping.
+For example, in the below image, notice that the AI puts some pinkish red dots around the center of the mask. As pink corresponds to bottom-left region of the image (grass and sunflowers), you can notice that the AI uses information from there to inpaint the mask. This might explain the strange details in the inpainted cloud.
+
 <div style="text-align:center">
 <img src="https://i.imgur.com/SOrkxIk.jpg" width="500"/>
 </div>
 
-5. You might want to change the inpainting result. We provide *painting tools* for that. These are similar to a conventional painter, except that the palette is the image itself. For example, in the below picture, I used the color picker to select a region containing a sunflower. In the bottom-right palette, you can see that the region corresponds to pink and red colors.
+4. You might want to change the inpainting result. We provide *painting tools* for that. These are similar to a conventional painter, except that the palette is the image itself. For example, in the below picture, I used the color picker to select a region containing a sunflower. In the bottom-right palette, you can see that the region corresponds to pink and red colors.
 <div style="text-align:center">
 <img src="https://i.imgur.com/gNRcQU6.png" width="500"/>
 </div>
 
-6. After picking, you can *color the mask*. This will make the AI draw information from selected color (region) to fill-in the mask. In the below example, I intended the AI to use the sunflower (pink and red colors).
+5. After picking, you can *color the mask*. This will make the AI draw information from selected color (region) to fill-in the mask. In the below example, I intended the AI to use the sunflower (pink and red colors). If you are done, press `Convert`. A modified inpainting result will show up.
 <div style="text-align:center">
 <img src="https://i.imgur.com/btQtWNE.png" width="500"/>
 </div>
 
-7. If you are done, press `Convert`. A modified inpainting result will show up.
 <div style="text-align:center">
 <img src="https://i.imgur.com/itBcCfI.jpg" width="500"/>
 </div>
 
-8. You can still press `Modulate` to keep on modulating. In the above example, I didn't like the subtle degradation around the sunflower, so I decided to color the region with clouds (yellow and blue colors).
+6. You can still press `Modulate` to keep on modulating. In the above example, I didn't like the subtle degradation around the sunflower, so I decided to color the region with clouds (yellow and blue colors). If you are satisfied, you can press `Next step`, and download the image or start again from the beginning.
 <div style="text-align:center">
 <img src="https://i.imgur.com/QFehly1.png" width="500"/>
 </div>
 <div style="text-align:center">
 <img src="https://i.imgur.com/ntFeVDU.jpg" width="500"/>
-</div>
-
-9. If you are satisfied, you can press `Next step`, and download the image or start again from the beginning.
-<div style="text-align:center">
-<img src="https://i.imgur.com/mfTQ9x7.jpg" width="500"/>
 </div>
