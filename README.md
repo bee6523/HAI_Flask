@@ -1,5 +1,24 @@
 # [CS492F Project] ImageHackers
-Breaking black-box of inpainting system with interactive UI
+
+# Project Summary
+![eyecatcher](https://i.imgur.com/hENAd4y.png)
+
+A black-box inpainting AI can ignore user intention without explanation, harming the user experience.
+To solve the problem, we injected a backdoor to a trained black-box AI and connected it to an intuitive coloring UI.
+Our approach allows a joint understanding & control of the inpainting process, and is fully unsupervised, unlike most of the interactive AI.
+
+<div style="text-align:center">
+<img src="https://i.imgur.com/s6Zf2T6.png" height="200"/>
+</div>
+
+Our framework supports three main types of interactions:
+* AI-driven inpainting of an image's masked regions
+* Visualization of AI decision via color-coded attention map
+* Modulation of AI decision via painting UI
+
+The second and third user interactions are realized with a unified, colored map representation of the model attention.
+This is our novel and unique approach.
+This is link for prototype: [KVPN required](http://143.248.133.65:4321/#).
 
 # Dependency
 `python` and `virtualenv` should suffice.
@@ -44,26 +63,6 @@ Main page for user interaction.
 
 ## static/js/processor.js
 Main javascript file that has functions for user modulation, model output request, etc.
-
-# Project Summary
-![eyecatcher](https://i.imgur.com/hENAd4y.png)
-
-A black-box inpainting AI can ignore user intention without explanation, harming the user experience.
-To solve the problem, we injected a backdoor to a trained black-box AI and connected it to an intuitive coloring UI.
-Our approach allows a joint understanding & control of the inpainting process, and is fully unsupervised, unlike most of the interactive AI.
-
-<div style="text-align:center">
-<img src="https://i.imgur.com/s6Zf2T6.png" height="200"/>
-</div>
-
-Our framework supports three main types of interactions:
-* AI-driven inpainting of an image's masked regions
-* Visualization of AI decision via color-coded attention map
-* Modulation of AI decision via painting UI
-
-The second and third user interactions are realized with a unified, colored map representation of the model attention.
-This is our novel and unique approach.
-This is link for prototype: [KVPN required](http://143.248.133.65:4321/#).
 
 # Instruction
 
