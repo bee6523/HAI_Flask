@@ -6,7 +6,7 @@
 ### Project Summary
 ![eyecatcher](https://i.imgur.com/hENAd4y.png)
 <div style="text-align:center">
-<img src="https://i.imgur.com/s6Zf2T6.png" height="150"/>
+<img src="https://i.imgur.com/s6Zf2T6.png" height="200"/>
 </div>
 
 A black-box inpainting AI can ignore user intention without explanation, harming the user experience. To solve the problem, we injected a backdoor to a trained black-box AI and connected it to an intuitive coloring UI. Our approach allows a joint understanding & control of the inpainting process, and is fully unsupervised, unlike most of the interactive AI.
