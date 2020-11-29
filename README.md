@@ -16,9 +16,7 @@ Our framework supports three main types of interactions:
 * Visualization of AI decision via color-coded attention map
 * Modulation of AI decision via painting UI
 
-The second and third user interactions are realized with a unified, colored map representation of the model attention.
-This is our novel and unique approach.
-This is link for prototype: [KVPN required](http://143.248.133.65:4321/#).
+Link for prototype: [KVPN required](http://143.248.133.65:4321/#).
 
 # Dependency
 `python` and `virtualenv` should suffice.
