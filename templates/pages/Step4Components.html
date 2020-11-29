@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="{{url_for('static', filename = 'css/Upload.css')}}" rel="stylesheet" />
+  </head>
+  <body id="step4Components">
+    <div id="downloadGadgets">
+        <button id="downloadBtn" class="step4Btn">
+          <a download="result.png" href="" onclick=downloadResultImage(this)>Download image</a></button>
+        <button id="restartBtn" class="step4Btn" onClick="window.location.href = ''">Start again</button>
+    </div>
+  <!-- <script type="text/javascript" src="{{url_for('static', filename = 'js/processor.js')}}"></script> -->
+  </body>
+</html>
