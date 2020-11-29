@@ -5,21 +5,15 @@ Breaking black-box of inpainting system with interactive UI
 `python` and `virtualenv` should suffice.
 Every required packages are listed in `engine/requirements.txt`, and can be installed by running `./install.sh`.
 After installation, activate the virtual environment in `engine/venv` by running `source ./activate.sh`.
-
-Web:
-* [Flask](https://palletsprojects.com/p/flask/) (Web)
-* [jQuery](https://jquery.com/)
-* [Sammy.js](http://sammyjs.org/) (Router)
-* [HTML5 Canvas](https://developer.mozilla.org/ko/docs/Web/HTML/Canvas)
-* [Fontawesome](https://fontawesome.com/)
-
-Model:
-* [DeepFillv1](https://github.com/JiahuiYu/generative_inpainting/tree/v1.0.0): JiaHui et al., Generative Image Inpainting with Contextual Attention, CVPR (2018) [[arXiv]](https://arxiv.org/abs/1801.07892)
-* [TenserFlow](https://www.tensorflow.org/?hl=ko)
-* [Matplotlib](https://matplotlib.org/)
-* [OpenCV](https://opencv.org/)
-* [scikit-learn](https://scikit-learn.org/)
-* [Jupyter](https://jupyter.org/)
+We provide an exhaustive listup:
+`tensorflow==1.5.0`
+`tensorflow-estimator==1.15.0`
+`tensorflow-probability==0.11.0`
+`matplotlib==3.3.1`
+`scikit-build`
+`opencv-python==4.4.0.42`
+`pyyaml`
+`git+git://github.com/JiahuiYu/neuralgym#egg=neuralgym`
 
 ### Implementation
 
