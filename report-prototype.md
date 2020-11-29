@@ -25,7 +25,7 @@ Link for prototype: http://143.248.133.65:4321/#.
 <img src="https://i.imgur.com/0pbDCKH.png" width="400"/>
 </div>
 
-In this section, we will further demonstrate how the upper image can be inpainted to produce the lower image.
+In this section, we will further demonstrate how the first image can be inpainted to produce the second image.
 
 1. Upload an image. Press `Next Step` and add masks. You can try both square & free-form masks, but we recommend non-overlapping squares because underlying AI is trained that way.
 <div style="text-align:center">
