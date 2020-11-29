@@ -1,6 +1,7 @@
 ## CS492F Design Project Milestone 2: Prototype
 ### Team: Attention!
 ###### 20160171 Jinwoo Kim, 20160508 Jungwon Lee, 20150686 Seonghoon Jeong
+###### This report contains Imgur files. Best viewed in web editors.
 
 ### Project Summary
 ![eyecatcher](https://i.imgur.com/hENAd4y.png)
