@@ -45,7 +45,7 @@ Main page for user interaction.
 ## static/js/processor.js
 Main javascript file that has functions for user modulation, model output request, etc.
 
-### Project Summary
+# Project Summary
 ![eyecatcher](https://i.imgur.com/hENAd4y.png)
 
 A black-box inpainting AI can ignore user intention without explanation, harming the user experience.
@@ -65,14 +65,14 @@ The second and third user interactions are realized with a unified, colored map 
 This is our novel and unique approach.
 This is link for prototype: [KVPN required](http://143.248.133.65:4321/#).
 
-### Instruction
+# Instruction
 
 <div style="text-align:center">
 <img src="https://i.imgur.com/YRM1Y3H.png" width="400"/>
 <img src="https://i.imgur.com/0pbDCKH.png" width="400"/>
 </div>
 
-In this section, we will further demonstrate how the above image can be inpainted to produce the bottom image.
+In this section, we will further demonstrate how the image on the left can be inpainted to produce the image on the right.
 
 1. Upload an image.
 <div style="text-align:center">
