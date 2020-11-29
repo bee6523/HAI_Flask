@@ -55,6 +55,8 @@ let processor = {
             img_ctx.drawImage(image,0,0,img_width,img_height);
             img_width = parseInt(img_width/8)*8;
             img_height = parseInt(img_height/8)*8;
+            cnv_ctx.clearRect(0,0,img_width,img_height);
+            att_ctx.clearRect(0,0,img_width,img_height);
           });
           image.src=window.URL.createObjectURL(image_file);
           $('#nextBtn').show();

@@ -11,6 +11,7 @@ var app = Sammy(function () {
     this.get("#/step1", function (context) {
         $("#stepInfo").text("Step1: Upload your image");
         $("#userUploadedImage").show();
+        $("#canvas_layer").hide();
         $("#prevBtn").hide();
         $("#toolBox").hide();
     });
@@ -18,6 +19,7 @@ var app = Sammy(function () {
     this.get("#/step2", function () {
         startDrawing();
         $("#convertBtn").hide();
+        $("#canvas_layer").show();
         $("#userUploadedImage").hide();
         $("#stepInfo").text("Step2: Mask your image");
         $("#prevBtn").show();
