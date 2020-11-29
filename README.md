@@ -1,21 +1,22 @@
 # [CS492F Project] ImageHackers
 Breaking black-box of inpainting system with interactive UI
 
-### Dependency
+# Dependency
 `python` and `virtualenv` should suffice.
 Every required packages are listed in `engine/requirements.txt`, and can be installed by running `./install.sh`.
 After installation, activate the virtual environment in `engine/venv` by running `source ./activate.sh`.
 We provide an exhaustive listup:
-`tensorflow==1.5.0`
-`tensorflow-estimator==1.15.0`
-`tensorflow-probability==0.11.0`
-`matplotlib==3.3.1`
-`scikit-build`
-`opencv-python==4.4.0.42`
-`pyyaml`
+
+`tensorflow==1.5.0`,
+`tensorflow-estimator==1.15.0`,
+`tensorflow-probability==0.11.0`,
+`matplotlib==3.3.1`,
+`scikit-build`,
+`opencv-python==4.4.0.42`,
+`pyyaml`,
 `git+git://github.com/JiahuiYu/neuralgym#egg=neuralgym`
 
-### Implementation
+# Implementation
 
 ## main.py
 Flask framework to deploy online & to transfer user request into AI.
