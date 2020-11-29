@@ -149,10 +149,12 @@ I contributed in implementing modulation tool for user interaction. Specifically
 * Pipeline for sending user modulated attention to server and receiving result
 
  This was my first time implementing web application, so I had to learn how to use javascript/HTML/flask/etc. from the beginning. Jungwon has gave me a nice information about where to start in javascript and HTML.
- However, most difficult part for me was user-understandability. The initial step 3 tool I implemented was using mechanism of color picker tool and fill tool, that user can choose one point at a time, and 'filling' process is fully done by algorithm. It was sufficient for our team to observe behavior of model, but not intuitive enough for users to understand what is happening inside the system. Attending point did not properly reflect user's notion, leading to fail in modulating as intended. Fortunately, our team had strength in communication and discussion. Jungwon has came up with better idea, which gives attending 'area' rather then point, and re-implemented step 3 more intuitively.
+ Porting our early repo to flask was another challenge. I had to change the overall directory configuration, our innate router 'sammy.js' to meet requirement of flask router so they can properly operate, and many other things. Through solving such conflicts, I realized the importance of making workflow pipeline, especially at planning phase. It would be much easier if we considered pipelining issue and start with flask at the beginning.
+ However, most difficult part for me was user-understandability. The initial step 3 tool I implemented was using mechanism of color picker tool and fill tool, that user can choose one point at a time, and 'filling' process is fully done by algorithm. It was sufficient for our team to observe behavior of model, but not intuitive enough for users to understand what is happening inside the system. Attending point did not properly reflect user's notion, leading to fail in modulating as intended. Fortunately, our team had strength in communication and discussion. By having many discussion, Jungwon has came up with better idea, which gives attending 'area' rather then point, and re-implemented step 3 more intuitively.
 
 While working on prototype, I learned following:
 * Some Basic programming skills for javascript, HTML, and css.
 * Way to construct web framework using flask
 * Handling AJAX request to communicate from front-end to back-end.
 * HTML canvas element and how to manage them.
+* How to communicate with team to improve the work.
