@@ -6,3 +6,5 @@ engine/input_att.png
 engine/input_image.png
 engine/input_mask.png
 static/img/ret.png
+static/tmp/*
+!static/tmp/README.md
