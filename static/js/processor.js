@@ -84,6 +84,8 @@ function startAttending(){
       document.getElementById("result_layer").style.visibility="visible";
     }
     return;
+  }else{
+    att_ctx.clearRect(0,0,img_width,img_height);
   }
 
   document.getElementById("result_layer").style.visibility="visible";
