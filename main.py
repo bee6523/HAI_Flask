@@ -57,7 +57,7 @@ def example_function():
     mask_path="./static/tmp/input_mask"+session['username']+".png"
 
     ret_path = "./static/tmp/model_output_image"+session['username']+".png"
-    ret_att_path = "./static/tmp/input_att"+session['username']+".png"
+    ret_att_path = "./static/tmp/input_ref_att"+session['username']+".png"
 
     cv2.imwrite(img_path,image)
     cv2.imwrite(mask_path,mask)
@@ -95,7 +95,7 @@ def showAttendResult():
     cv2.imwrite(att_path,att)
     
     cache = "./static/tmp/cache"+session['username']+".npy"
-    ref_att_path = "./static/tmp/input_att"+session['username']+".png"
+    ref_att_path = "./static/tmp/input_ref_att"+session['username']+".png"
     
     controlled_inpaint(image_path=img_path,
                        mask_path=mask_path,
