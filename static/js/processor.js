@@ -73,10 +73,9 @@ function startDrawing(){
   tmp_layer.addEventListener("mousedown",initDraw);
   tmp_layer.addEventListener("mouseup",endDraw);
   tmp_layer.addEventListener("mouseout",endDraw);
-  tool="rect";
+  recrec();
 }
 function startAttending(){
-  console.log(change_flag)
   att_layer.style.visibility="visible";
   if(change_flag == false){
     document.getElementById("convertBtn").disabled=false;
@@ -118,7 +117,7 @@ function showResult(){
     $('#convertBtn').html("Convert");
     $('#attendingGadgets').show();
     $('#mapContainer').show();
-    tool="picker";
+    pickicker();
     showingResult=false;
   }else{
     if(change_flag == false){
@@ -399,6 +398,7 @@ function drawLine() {
 function undodo(){
   if(maskUndoList.length>0){
     cnv_ctx.putImageData(maskUndoList.pop(),0,0);
+    change_flag=true;
   }
 }
 function recrec() {
@@ -416,6 +416,7 @@ function brusrush(n) {
 function undodo_3(){
   if(attUndoList.length>0){
     att_ctx.putImageData(attUndoList.pop(),0,0);
+    change_flag=true;
   }
 }
 function pickicker() {
