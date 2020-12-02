@@ -15,8 +15,12 @@
       <canvas id="result_layer" width="560" height="400"></canvas>
     </div>
     <br>
-    <button id="convertBtn" class="processBtn" hidden disabled=true onClick=showResult()>Modulate</button>
-    <br>
+    <div id="containconvert" hidden>
+      <button id="convertBtn" class="processBtn" disabled=true onClick=showResult()>Modulate</button>
+      <div id="modulate-tooltip"><span id="quesBtn"><i class="fas fa-question"></i></span>
+        <div id="moduTip">If you don't like the result, you can click this button and directly modulate model's attention, which will be displayed as color map.</div>
+      </div>
+    </div>
     <button id="prevBtn" class="processBtn" hidden onClick=prev()>Previous step</button>
     <button id="nextBtn" class="processBtn" hidden onClick=next()>Next step</button>
   <script type="text/javascript" src="{{url_for('static', filename = 'js/processor.js')}}"></script>

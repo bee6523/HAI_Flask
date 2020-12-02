@@ -34,6 +34,7 @@
 
 #convertBtn {
     width: 46%;
+    position: relative;
 }
 .toolBtn {
 	font-family: 'Quicksand';
@@ -46,6 +47,32 @@
 }
 #step3Components {
     max-height: 400px;
+}
+#containconvert {
+    position: relative;
+}
+#modulate-tooltip {
+    display: inline;
+    position: absolute;
+    right: 120px;
+}
+#moduTip {
+    display: none;
+    width: 250px;
+    position: absolute;
+    border: 2px solid gray;
+    font-family: 'Quicksand';
+    font-size: 0.6em;
+    margin: 3px;
+    margin-left: 5px;
+    margin-top: 5px;
+    border-radius: 8px;
+    background-color: white;
+    z-index: 2;
+    padding: 5px;
+}
+#modulate-tooltip:hover #moduTip {
+    display: inline;
 }
 /* step 3 tooltip */
 #tooltip {

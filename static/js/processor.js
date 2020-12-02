@@ -112,6 +112,7 @@ function startAttending(){
 }
 
 function showResult(){
+  $("#modulate-tooltip").hide();
   if(showingResult){
     document.getElementById("result_layer").style.visibility="hidden";
     $('#convertBtn').html("Convert");
