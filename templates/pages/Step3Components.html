@@ -10,7 +10,8 @@
         <div id="step3Tip">
           <table id="tipContents">
             <tr>
-              <td class="table-top"><button class="toolBtn"><i class="fas fa-eye-dropper"></i></button></td>
+              <td class="table-top"><button class="toolBtn smPickBtn">
+                <image class="pickerIcon" src="{{url_for('static', filename = 'img/picker.svg')}}" width="11px"></button></td>
               <td>This is region picker. You can drag and choose the region you want AI to attend when repainting the image.
                 You can then use rectangle and brush tool to paint the attention map. <br/>
                 <image class="tip-image" src="{{url_for('static', filename = 'img/picker.gif')}}" width="180px"></image>
@@ -31,7 +32,8 @@
           </table>
         </div>
       </div>
-      <li><button id="pickerBtn" class="toolBtn" onClick="pickicker()" disabled=true><i class="fas fa-eye-dropper"></i></button></li>
+      <li><button id="pickerBtn" class="toolBtn pickBtn" onClick="pickicker()" disabled=true>
+        <image class="pickerIcon" src="{{url_for('static', filename = 'img/picker.svg')}}" width="20px"></button></li>
       <!-- <li><button id="fillBtn" class="toolBtn" onClick="fillill()"><i class="fas fa-fill"></i></button></li> -->
       <li><button id="rect3Btn" class="toolBtn" onClick="rectect()"><i class="fas fa-vector-square"></i></button></li>
       <li><div id="brushsize"><button id="brush3Btn" class="toolBtn">

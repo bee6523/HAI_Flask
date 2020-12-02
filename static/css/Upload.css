@@ -33,7 +33,7 @@
 }
 
 #convertBtn {
-    width: 46%;
+    width: 45%;
     position: relative;
 }
 .toolBtn {
@@ -43,33 +43,53 @@
     margin: 3px;
     border: 2px solid gray;
     border-radius: 8px;
-    background-color: white;    
+    background-color: white;
+    text-align: center;
+    vertical-align: middle;
+}
+.pickBtn {
+    padding: 7px 8px 7px 8px;
+}
+.toolBtn:disabled {
+    color: white;
+    background-color: #555;
+}
+.pickBtn:disabled img{
+    filter: invert(100%);
+}
+.smPickBtn {
+    padding: 6px 7px 6px 7px;
 }
 #step3Components {
     max-height: 400px;
 }
+.pickerIcon {
+    display: block;
+    margin: 0 auto;
+}
+/* Modulation tooltip */
 #containconvert {
     position: relative;
 }
 #modulate-tooltip {
     display: inline;
     position: absolute;
-    right: 120px;
+    right: 130px;
 }
 #moduTip {
     display: none;
     width: 250px;
     position: absolute;
-    border: 2px solid gray;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
     font-family: 'Quicksand';
     font-size: 0.6em;
     margin: 3px;
     margin-left: 5px;
     margin-top: 5px;
     border-radius: 8px;
-    background-color: white;
     z-index: 2;
-    padding: 5px;
+    padding: 6px;
 }
 #modulate-tooltip:hover #moduTip {
     display: inline;
