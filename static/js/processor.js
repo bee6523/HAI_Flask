@@ -73,7 +73,7 @@ function startDrawing(){
   tmp_layer.addEventListener("mousedown",initDraw);
   tmp_layer.addEventListener("mouseup",endDraw);
   tmp_layer.addEventListener("mouseout",endDraw);
-  recrec();
+  tool="rect";
 }
 function startAttending(){
   att_layer.style.visibility="visible";
