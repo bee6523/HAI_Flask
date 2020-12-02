@@ -71,8 +71,8 @@ function startDrawing(){
   //att_ctx.clearRect(0,0,img_width,img_height);
   tmp_layer.addEventListener("mousemove",doDraw);
   tmp_layer.addEventListener("mousedown",initDraw);
-  tmp_layer.addEventListener("mouseup",endDraw);
-  tmp_layer.addEventListener("mouseout",endDraw);
+  window.addEventListener("mouseup",endDraw);
+  tmp_layer.addEventListener("mouseout",doDraw);
   tool="rect";
 }
 function startAttending(){
