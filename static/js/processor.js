@@ -258,12 +258,12 @@ function doDraw(e){
   var mainDiv=document.getElementById("mainDiv");
   let cx=e.pageX-mainDiv.offsetLeft;
   let cy=e.pageY-mainDiv.offsetTop;
-  if(cx>=img_width) cx=img_width;
-  else if(cx<0) cx=0;
-  if(cy>=img_height) cy=img_height;
-  else if(cy<0) cy=0;
   //console.log(cx,e.screenX,mainDiv.offsetLeft);
   if(draw_flag){
+    if(cx>=img_width) cx=img_width;
+    else if(cx<0) cx=0;
+    if(cy>=img_height) cy=img_height;
+    else if(cy<0) cy=0;
     switch(tool){
       case "brush":
         prevX = currX;
@@ -330,6 +330,27 @@ function doDraw(e){
           tmp_ctx.stroke();
           tmp_ctx.closePath();
         }
+        break;
+    }
+  }else{
+    [r,g,b,a]=[255,255,255,255];
+    switch(tool){
+      case "brush_3":
+        pixData = box_ctx.getImageData(10,10,1,1);
+        [r, g, b, a] = pixData.data;
+        if ([r,g,b,a]==[0,0,0,0]) 
+          break;
+      case "brush":
+        tmp_ctx.fillStyle =`rgba(${r},${g},${b},${a/255})`;
+        tmp_ctx.clearRect(currX-lineWidth/2-1,currY-lineWidth/2-1,lineWidth+2,lineWidth+2);
+        currX=cx;
+        currY=cy;
+        tmp_ctx.lineWidth=lineWidth;
+        tmp_ctx.lineCap="round";
+        tmp_ctx.beginPath();
+        tmp_ctx.arc(currX,currY,lineWidth/2,0,2*Math.PI);
+        tmp_ctx.fill();
+        tmp_ctx.closePath();
         break;
     }
   }
