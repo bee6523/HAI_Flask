@@ -51,8 +51,8 @@ let processor = {
               img_width=560;
               img_height=parseInt(560*ratio);
             }
-            img_layer.width=cnv_layer.width=tmp_layer.width=result_layer.width=parseInt(img_width/8)*8;
-            img_layer.height=cnv_layer.height=tmp_layer.height=result_layer.height=parseInt(img_height/8)*8;
+            img_layer.width=cnv_layer.width=att_layer.width=tmp_layer.width=result_layer.width=parseInt(img_width/8)*8;
+            img_layer.height=cnv_layer.height=att_layer.height=tmp_layer.height=result_layer.height=parseInt(img_height/8)*8;
             img_ctx.drawImage(image,0,0,img_width,img_height);
             img_width = parseInt(img_width/8)*8;
             img_height = parseInt(img_height/8)*8;
