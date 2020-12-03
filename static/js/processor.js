@@ -46,7 +46,8 @@ let processor = {
             if(ratio>(400/560)){
               img_width=parseInt(400/ratio);
               img_height=400;
-            }else{
+            }
+            else{
               img_width=560;
               img_height=parseInt(560*ratio);
             }
@@ -55,6 +56,8 @@ let processor = {
             img_ctx.drawImage(image,0,0,img_width,img_height);
             img_width = parseInt(img_width/8)*8;
             img_height = parseInt(img_height/8)*8;
+            $("#canvasDiv").width(img_width+100);
+            $("#canvasDiv").height(img_height+20);
             cnv_ctx.clearRect(0,0,img_width,img_height);
             att_ctx.clearRect(0,0,img_width,img_height);
           });
@@ -465,6 +468,8 @@ function palettesize() {
   pal_layer.style.visibility="visible";
   pal_ctx.clearRect(0,0,palette_width,palette_height);
   pal_ctx.drawImage(colorMap,0,0,palette_width,palette_height);
+  reg_ctx = reg_layer.getContext("2d");
+  reg_ctx.drawImage(cnv_layer,0,0,palette_width,palette_height);
 }
 
 function fillAttention(sx,sy){

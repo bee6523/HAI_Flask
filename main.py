@@ -26,7 +26,11 @@ def index():
         print("session set :")
         print(session['username'])
     return render_template("index.html")
- 
+
+@app.route('/pages/Mainpage.html')
+def Mainpage():
+    return render_template("pages/Mainpage.html") 
+
 @app.route('/pages/Upload.html')
 def Upload():
     return render_template("pages/Upload.html")

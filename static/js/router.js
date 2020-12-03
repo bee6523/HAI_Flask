@@ -1,19 +1,22 @@
 var app = Sammy(function () {
     
     //라우트 설정****
- 
+    var beenhere = false;
+
     this.get("#/", function () {
         //인덱스 페이지
-        $("#stepInfo").text("Step1: Upload your image");
-        $("#mainDiv").load("/pages/Upload.html");
+        $(".progress").hide();
+        $("#mainDiv").load("/pages/Mainpage.html");
     });
 
-    this.get("#/step1", function (context) {
-        $("#stepInfo").text("Step1: Upload your image");
+    this.get("#/step1", function () {
+        $("#stepInfo").text("Step 1: Upload your image.");
+        $(".progress").show();
+        if (!beenhere) $("#mainDiv").load("/pages/Upload.html");
         $("#userUploadedImage").show();
-        $("#canvas_layer").hide();
         $("#prevBtn").hide();
         $("#toolBox").hide();
+        beenhere = true;
     });
  
     this.get("#/step2", function () {
@@ -21,7 +24,7 @@ var app = Sammy(function () {
         $("#containconvert").hide();
         $("#canvas_layer").show();
         $("#userUploadedImage").hide();
-        $("#stepInfo").text("Step2: Mask your image");
+        $("#stepInfo").text("Step 2: Mask your image.");
         $("#prevBtn").show();
         $("#toolBox").show();
         $("#toolBox").load("./pages/Step2Components.html");
@@ -31,14 +34,15 @@ var app = Sammy(function () {
         $("#containconvert").show();
         document.getElementById("convertBtn").disabled=true;
         startAttending();
-        $("#stepInfo").text("Step3: Set reference region");
+        $("#stepInfo").text("Step 3: See initial inpainting result.\n If you want to modify the result, click modulate button.");
         $("#nextBtn").show();
         $("#toolBox").load("./pages/Step3Components.html");
     });
 
     this.get("#/step4", function () {
         //do display
-        $("#stepInfo").text("Step4: See the result");
+        $("#stepInfo").text("Step 4: Download your result!");
+        $("#modulate-tooltip").hide();
         $('#result_layer').css("visibility","visible");
         $("#toolBox").load("./pages/Step4Components.html");
         $("#nextBtn").hide();

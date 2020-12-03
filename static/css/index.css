@@ -87,3 +87,13 @@
 	display: flex;
 	justify-content: center;
 } 
+#stepInfo {
+	position: relative;
+	width: 60%;
+	margin: auto;
+	font-family: 'Quicksand';
+	font-weight: 700;
+	text-align: left;
+	font-size: 1.2em;
+	overflow-wrap: break-word;
+}

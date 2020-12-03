@@ -6,26 +6,26 @@
   </head>
   <body id="step3Components">
     <div id="attendingGadgets" hidden>
-      <div id="tooltip"><span id="infoBtn"><i class="fas fa-info-circle"></i></span>
+      <div id="tooltip"><span id="infoBtn"><i class="fas fa-question-circle"></i> How to use modulation tools?<br/></span>
         <div id="step3Tip">
           <table id="tipContents">
             <tr>
               <td class="table-top"><button class="toolBtn smPickBtn">
                 <image class="pickerIcon" src="{{url_for('static', filename = 'img/picker.svg')}}" width="11px"></button></td>
-              <td>This is region picker. You can drag and choose the region you want AI to attend when repainting the image.
-                You can then use rectangle and brush tool to paint the attention map. <br/>
+              <td>This is region picker. You can drag and choose where you want AI to refer to when repainting the image.
+                You can then use rectangle and brush to paint on the color map. <br/>
                 <image class="tip-image" src="{{url_for('static', filename = 'img/picker.gif')}}" width="180px"></image>
               </td>
             </tr>
             <tr>
               <td class="table-top"><button class="toolBtn"><i class="fas fa-vector-square"></i></button></td>
-              <td>This is rectangle tool. You can paint attention in rectangular shape on the masked region. <br/>
+              <td>This is rectangle tool. You can paint in rectangular shape on the masked region. <br/>
                 <image class="tip-image" src="{{url_for('static', filename = 'img/rect.gif')}}" width="180px"></image>
               </td>
             </tr>
             <tr>
               <td class="table-top"><button class="toolBtn"><i class="fas fa-paint-brush"></i></button></td>
-              <td>This is brush tool. You can choose the brush size and paint attention in free form on the masked region. <br/>
+              <td>This is brush tool. You can choose the brush size and paint in free form on the masked region. <br/>
                 <image class="tip-image" src="{{url_for('static', filename = 'img/brush.gif')}}" width="180px"></image>
               </td>
             </tr>
@@ -47,6 +47,11 @@
       <li><button id="undo3Btn" class="toolBtn" onClick="undodo_3()"><i class="fas fa-undo"></i></button></li>
     </div>
     <div id="mapContainer" hidden>
+      <div id="colortip"><span id="infoBtn"><i class="fas fa-question-circle"></i> What does the color mean?</span>
+        <div id="colmapTip">
+          Through the colors on the image's masked region, you can see where the AI referred to when repainting the image. Image pixels are represented as the color on same relative position of this color map.
+        </div>
+      </div>
       <div id="markContainer"><canvas id="color_layer" width="20" height="20"></canvas></div>
       <div id="palContainer">
         <canvas id="colorpalette" width="100" height="80"></canvas>
