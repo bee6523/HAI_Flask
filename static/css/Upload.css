@@ -76,6 +76,10 @@
     position: absolute;
     right: 130px;
 }
+#quesBtn {
+    font-size: 1.4em;
+    color: #eba524;    
+}
 #moduTip {
     display: none;
     width: 250px;
@@ -102,6 +106,10 @@
     margin-bottom: 8px;
     display: inline;
 }
+#infoBtn {
+    font-size: 1.6em;
+    color: #eba524;
+}
 #tooltip:hover #step3Tip {
     display: inline;
 }
@@ -110,7 +118,7 @@
     position: absolute;
     border: 2px solid gray;
     font-family: 'Quicksand';
-    font-size: 0.5em;
+    font-size: 0.6em;
     margin: 2px;
     margin-left: 12px;
     border-radius: 8px;
