@@ -1,3 +1,7 @@
+#startBtn {
+    font-weight: 700;
+}
+
 #canvasDiv{
     width: 560px;
     height: 400px;
