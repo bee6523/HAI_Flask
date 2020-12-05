@@ -10,7 +10,8 @@ var image_file, image, colorMap, loadImage,
   attendlX,attendlY,
   attendrX,attendrY,
   lineLx, lineLy,
-  lineHx, lineHy;
+  lineHx, lineHy,
+  att_img;
 var showingResult=true; //true if displaying result, false if modulating phase
 var mask, attention;
 var tool="rect";
@@ -20,6 +21,7 @@ var change_flag=true;
 var maskUndoList=[];
 var attUndoList=[];
 
+///Triggered when processor.js is loaded
 let processor = {
     doLoad: function() {
       img_layer = document.getElementById("img_layer");
@@ -67,6 +69,7 @@ let processor = {
     },
   };
 
+/// Step 2 Configuration
 function startDrawing(){
   document.getElementById("result_layer").style.visibility="hidden";
   att_layer.style.visibility="hidden";
@@ -77,6 +80,8 @@ function startDrawing(){
   window.addEventListener("mouseup",endDraw);
   tool="rect";
 }
+
+/// Step 3 configuration, send AJAX request to model for initial result
 function startAttending(){
   att_layer.style.visibility="visible";
   if(change_flag == false){
@@ -113,6 +118,7 @@ function startAttending(){
   tool="null";
 }
 
+///Send AJAX request to model(for step3)
 function showResult(){
   $("#modulate-tooltip").hide();
   if(showingResult){
@@ -163,10 +169,12 @@ function showResult(){
     console.log("send!!");
   }
 }
+
+///Callback function that is triggered when backend model created output&attention image at step2->step3 process
 function callback_getAttention(response){
   console.log("success!")
   console.log(response);
-  var att_tmp=new Image();
+  att_img=new Image();
   var result_image= new Image();
   result_image.addEventListener("load",(evt)=>{
     result_ctx.drawImage(result_image,0,0,img_width,img_height);
@@ -175,18 +183,19 @@ function callback_getAttention(response){
     $('#convertBtn').html("Modulate");
     document.getElementById("convertBtn").disabled=false;
   });
-  att_tmp.addEventListener("load",(evt)=>{
-    console.log(att_ctx.globalCompositeOperation);
+  att_img.addEventListener("load",(evt)=>{
+    console.log("Attention image loaded");
     att_ctx.drawImage(cnv_layer,0,0,img_width,img_height);
     att_ctx.globalCompositeOperation="source-in";
-    att_ctx.drawImage(att_tmp,0,0,img_width,img_height);
+    att_ctx.drawImage(att_img,0,0,img_width,img_height);
     att_ctx.globalCompositeOperation="source-over";
   });
   paths=response.split('&');
   result_image.src=paths[0]+ "?t=" + new Date().getTime();
-  att_tmp.src=paths[1]+ "?t="+ new Date().getTime();
+  att_img.src=paths[1]+ "?t="+ new Date().getTime();
 }
 
+///Callback function that is triggered when backend model created output image at step3 convert
 function callback_getResult(response){
   console.log(response);
   var result_image = new Image();
@@ -200,6 +209,8 @@ function callback_getResult(response){
   result_image.src=response + "?t=" + new Date().getTime();
 }
 
+
+/// Pre-process function for sending mask image to backend model
 function convertToMask(){
   var canvas=document.createElement("canvas");
   var ctx=canvas.getContext("2d");
@@ -211,6 +222,7 @@ function convertToMask(){
 
   return canvas.toDataURL("image/png");
 }
+/// Pre-process function for sending Attention image to backend model
 function convertToAttImage(){
   var canvas=document.createElement("canvas");
   var ctx=canvas.getContext("2d");
@@ -223,40 +235,40 @@ function convertToAttImage(){
   return canvas.toDataURL("image/png");
 }
 
-
+/* mouseDown event handler */
 function initDraw(e){
-  if(tool=="fill"){
-    attUndoList.push(att_ctx.getImageData(0,0,img_width,img_height));
-    fillAttention(e.layerX,e.layerY);
-    change_flag=true;
-    return;
-  }
-  else if (tool=="brush_3"){
-    draw_flag=true;
-    currX = e.layerX;
-    currY = e.layerY;
-    prevX=currX;
-    prevY=currY;
-    lineLx=currX;
-    lineLy=currY;
-    lineHx=currX;
-    lineHy=currY;
-  }
-  else if (tool=="rect" || tool=="rect_3"){
-    draw_flag=true;
-    currX = parseInt(e.layerX/8)*8;
-    currY = parseInt(e.layerY/8)*8;
-    prevX=currX;
-    prevY=currY;
-  }
-  else{
-    draw_flag=true;
-    currX = e.layerX;
-    currY = e.layerY;
-    prevX=currX;
-    prevY=currY;
+  switch(tool){
+    case "brush_3":
+      draw_flag=true;
+      currX = e.layerX;
+      currY = e.layerY;
+      prevX=currX;
+      prevY=currY;
+      lineLx=currX;
+      lineLy=currY;
+      lineHx=currX;
+      lineHy=currY;
+      break;
+    case "rect":
+    case "rect_3":
+    case "eraser":
+    case "eraser_3":
+      draw_flag=true;
+      currX = parseInt(e.layerX/8)*8;
+      currY = parseInt(e.layerY/8)*8;
+      prevX=currX;
+      prevY=currY;
+      break;
+    default:
+      draw_flag=true;
+      currX = e.layerX;
+      currY = e.layerY;
+      prevX=currX;
+      prevY=currY;
   }
 }
+
+/// MouseMove event handler
 function doDraw(e){
   var mainDiv=document.getElementById("mainDiv");
   let cx=e.pageX-mainDiv.offsetLeft;
@@ -281,6 +293,12 @@ function doDraw(e){
         currY=parseInt(cy/8)*8;
         tmp_ctx.fillStyle="white";
         tmp_ctx.fillRect(prevX,prevY,currX-prevX,currY-prevY);
+        break;
+      case "eraser":
+        tmp_ctx.clearRect(prevX,prevY,currX-prevX,currY-prevY);
+        currX=parseInt(cx/8)*8;
+        currY=parseInt(cy/8)*8;
+        tmp_ctx.drawImage(img_layer,prevX,prevY,currX-prevX,currY-prevY,prevX,prevY,currX-prevX,currY-prevY);
         break;
       case "picker":
         tmp_ctx.clearRect(0,0,tmp_layer.width,tmp_layer.height);
@@ -334,6 +352,15 @@ function doDraw(e){
           tmp_ctx.closePath();
         }
         break;
+      case "eraser_3":
+        tmp_ctx.clearRect(prevX,prevY,currX-prevX,currY-prevY);
+        tmp_ctx.drawImage(att_layer,prevX,prevY,currX-prevX,currY-prevY,prevX,prevY,currX-prevX,currY-prevY);
+        currX=parseInt(cx/8)*8;
+        currY=parseInt(cy/8)*8;
+        tmp_ctx.globalCompositeOperation = "source-atop";
+        tmp_ctx.drawImage(att_img,prevX,prevY,currX-prevX,currY-prevY,prevX,prevY,currX-prevX,currY-prevY);
+        tmp_ctx.globalCompositeOperation = "source-over";
+        break;
     }
   }else{
     [r,g,b,a]=[255,255,255,255];
@@ -358,6 +385,8 @@ function doDraw(e){
     }
   }
 }
+
+/// MouseUp event handler
 function endDraw(e){
   if(draw_flag){
     draw_flag=false;
@@ -375,7 +404,11 @@ function endDraw(e){
         wratio = colorMap.width/tmp_layer.width;
         box_ctx.drawImage(colorMap,(prevX+currX)/2*wratio-5, (prevY+currY)/2*hratio-5, 10, 10, 0, 0, color_layer.width, color_layer.height);
         break;
-      case "fill":
+      case "eraser":
+        maskUndoList.push(cnv_ctx.getImageData(0,0,img_width,img_height));
+        cnv_ctx.clearRect(prevX,prevY,currX-prevX,currY-prevY);
+        tmp_ctx.clearRect(0,0,tmp_layer.width,tmp_layer.height);
+        change_flag=true;
         break;
       case "rect_3":
         attUndoList.push(att_ctx.getImageData(0,0,img_width,img_height));
@@ -408,6 +441,12 @@ function endDraw(e){
         
         change_flag=true;
         break;
+      case "eraser_3":
+        attUndoList.push(att_ctx.getImageData(0,0,img_width,img_height));
+        att_ctx.drawImage(tmp_layer,0,0);
+        tmp_ctx.clearRect(0,0,tmp_layer.width,tmp_layer.height);
+        change_flag=true;
+        break;
       default:
         maskUndoList.push(cnv_ctx.getImageData(0,0,img_width,img_height));
         cnv_ctx.drawImage(tmp_layer,0,0);
@@ -427,61 +466,68 @@ function drawLine() {
   tmp_ctx.closePath();
 }
 
-function undodo(){
-  if(maskUndoList.length>0){
-    cnv_ctx.putImageData(maskUndoList.pop(),0,0);
-    change_flag=true;
-  }
-}
+///Function for Step 2 tool transition
 function recrec() {
   tool="rect";
   document.getElementById("brushBtn").disabled=false;
   document.getElementById("rectBtn").disabled=true;  
+  document.getElementById("eraseBtn").disabled=false;
 }
 function brusrush(n) {
   tool="brush";
   lineWidth=n;
   document.getElementById("rectBtn").disabled=false;
   document.getElementById("brushBtn").disabled=true;
+  document.getElementById("eraseBtn").disabled=false;
 }
-
-function undodo_3(){
-  if(attUndoList.length>0){
-    att_ctx.putImageData(attUndoList.pop(),0,0);
+function erasrase() {
+  tool="eraser";
+  document.getElementById("rectBtn").disabled=false;
+  document.getElementById("brushBtn").disabled=false;
+  document.getElementById("eraseBtn").disabled=true;
+}
+function undodo(){
+  if(maskUndoList.length>0){
+    cnv_ctx.putImageData(maskUndoList.pop(),0,0);
     change_flag=true;
   }
 }
+
+/// function for step3 tool transition
 function pickicker() {
   tool="picker";
   document.getElementById("pickerBtn").disabled=true;
-  /*document.getElementById("fillBtn").disabled=false;*/
   document.getElementById("rect3Btn").disabled=false;
   document.getElementById("brush3Btn").disabled=false;
+  document.getElementById("eraser3Btn").disabled=false;
 }
-/*
-function fillill() {
-  tool="fill";
-  document.getElementById("pickerBtn").disabled=false;
-  document.getElementById("fillBtn").disabled=true;
-  document.getElementById("rect3Btn").disabled=false;
-  document.getElementById("brush3Btn").disabled=false;
-}
-*/
 function rectect() {
   tool="rect_3";
   document.getElementById("pickerBtn").disabled=false;
-  /*document.getElementById("fillBtn").disabled=false;*/
   document.getElementById("rect3Btn").disabled=true;
   document.getElementById("brush3Btn").disabled=false;
-
+  document.getElementById("eraser3Btn").disabled=false;
 }
 function brusrush_3(n) {
   tool="brush_3";
   lineWidth=n;
   document.getElementById("pickerBtn").disabled=false;
-  /*document.getElementById("fillBtn").disabled=false;*/
   document.getElementById("rect3Btn").disabled=false;
   document.getElementById("brush3Btn").disabled=true;
+  document.getElementById("eraser3Btn").disabled=false;
+}
+function erasrase_3() {
+  tool="eraser_3";
+  document.getElementById("pickerBtn").disabled=false;
+  document.getElementById("rect3Btn").disabled=false;
+  document.getElementById("brush3Btn").disabled=false;
+  document.getElementById("eraser3Btn").disabled=true;
+}
+function undodo_3(){
+  if(attUndoList.length>0){
+    att_ctx.putImageData(attUndoList.pop(),0,0);
+    change_flag=true;
+  }
 }
 
 function palettesize() {
