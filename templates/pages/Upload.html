@@ -7,6 +7,9 @@
     <div>
       <input type="file" name="file" id="userUploadedImage" accept="image/*">
     </div>
+    <div id="compareoriginal"><button hidden id="originalBtn" disabled=true class="processBtn" onmouseover="showOriginalImage()"
+      onmouseout="hideOriginalImage()">Show Original Image</button>
+    </div>
     <div id="canvasDiv">
       <canvas id="img_layer" width="560" height="400"></canvas>
       <canvas id="canvas_layer" width="560" height="400"></canvas>

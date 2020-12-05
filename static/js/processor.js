@@ -147,6 +147,7 @@ function showResult(){
     result_ctx.drawImage(loadImage,img_width/2-50,img_height/2-50,100,100);
 
     document.getElementById("convertBtn").disabled=true;
+    document.getElementById("originalBtn").disabled=true;
     $('#attendingGadgets').hide();
     $('#mapContainer').hide();
 
@@ -182,6 +183,7 @@ function callback_getAttention(response){
     attUndoList=[];
     $('#convertBtn').html("Modulate");
     document.getElementById("convertBtn").disabled=false;
+    document.getElementById("originalBtn").disabled=false;
   });
   att_img.addEventListener("load",(evt)=>{
     console.log("Attention image loaded");
@@ -205,6 +207,7 @@ function callback_getResult(response){
     result_ctx.drawImage(result_image,0,0,img_width,img_height);
     $('#convertBtn').html("Modulate");
     document.getElementById("convertBtn").disabled=false;
+    document.getElementById("originalBtn").disabled=false;
   });
   result_image.src=response + "?t=" + new Date().getTime();
 }
