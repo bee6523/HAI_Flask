@@ -16,6 +16,7 @@ var showingResult=true; //true if displaying result, false if modulating phase
 var mask, attention;
 var tool="rect";
 var lineWidth=5;
+var sizeChecked=false;
 var draw_flag=false;
 var change_flag=true;
 var maskUndoList=[];
@@ -481,7 +482,15 @@ function recrec() {
 }
 function brusrush(n) {
   tool="brush";
-  lineWidth=n;
+  if (n==="i") {
+    if (!sizeChecked) {
+      lineWidth=20;
+    }
+  }
+  else {
+    lineWidth=n;
+    sizeChecked=true;
+  }
   document.getElementById("rectBtn").disabled=false;
   document.getElementById("brushBtn").disabled=true;
   document.getElementById("eraseBtn").disabled=false;
@@ -516,7 +525,15 @@ function rectect() {
 }
 function brusrush_3(n) {
   tool="brush_3";
-  lineWidth=n;
+  if (n==="i") {
+    if (!sizeChecked) {
+      lineWidth=20;
+    }
+  }
+  else {
+    lineWidth=n;
+    sizeChecked=true;
+  }
   document.getElementById("pickerBtn").disabled=false;
   document.getElementById("rect3Btn").disabled=false;
   document.getElementById("brush3Btn").disabled=true;
