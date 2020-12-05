@@ -60,6 +60,7 @@ let processor = {
             img_height = parseInt(img_height/8)*8;
             $("#canvasDiv").width(img_width+100);
             $("#canvasDiv").height(img_height+20);
+            $("#comparediv").width(img_width+100);
             cnv_ctx.clearRect(0,0,img_width,img_height);
             att_ctx.clearRect(0,0,img_width,img_height);
           });
@@ -126,6 +127,7 @@ function showResult(){
     $('#convertBtn').html("Convert");
     $('#attendingGadgets').show();
     $('#mapContainer').show();
+    $("#comparediv").width(img_width+100+$("#attendingGadgets").width());
     pickicker();
     showingResult=false;
   }else{
@@ -135,6 +137,7 @@ function showResult(){
       document.getElementById("convertBtn").disabled=false;
       $('#attendingGadgets').hide();
       $('#mapContainer').hide();
+      $("#comparediv").width(img_width+100);
       showingResult=true;
       return;
     }

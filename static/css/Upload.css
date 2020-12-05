@@ -1,6 +1,9 @@
 #startBtn {
     font-weight: 700;
 }
+.hidden {
+    opacity: 0;
+}
 #canvasDiv{
     width: 560px;
     height: 400px;
@@ -12,6 +15,7 @@
     position: absolute;
     left: 0;
     right:0;
+    max-height: 100%;
 }
 #img_layer{ z-index: 0;}
 #canvas_layer{ z-index: 1; }
@@ -25,6 +29,22 @@
 #attendingGadgets {
     list-style-type: none;
     text-align: left;
+}
+.compareBtn {
+    font-family: 'Quicksand';
+    font-size: 1em;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 12px;
+    border: none;
+    background-color: #e7c587;
+    color: white;   
+}
+.compareBtn:disabled {
+    background-color: lightgray;   
+}
+.compareBtn:hover {
+    background-color: #eba524;
 }
 .processBtn {
 	font-family: 'Quicksand';

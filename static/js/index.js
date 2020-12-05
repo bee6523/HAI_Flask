@@ -1,5 +1,5 @@
 function next() {
-  var step = $("li[class=is-active]");
+  var step = $("li.is-active");
   step.removeClass("is-active");
   step.addClass("is-complete");
   const num = parseInt(step.attr('data-step'))+1;
@@ -9,16 +9,12 @@ function next() {
   window.location.href = '#/step'+data;
 }
 function prev() {
-  var step = $("li[class=is-active");
+  var step = $("li.is-active");
   step.removeClass("is-active");
   const num = parseInt(step.attr('data-step'))-1;
-  if (num == NaN) {
-    window.location.href = '#/step3';
-  } else {
   const data =  num !== 0 ? String(num) : "1";
   step = $('li[data-step='+data+']');
   step.removeClass("is-complete");
   step.addClass("is-active");
   window.location.href = '#/step'+data;
-  }
 }

@@ -23,7 +23,7 @@ var app = Sammy(function () {
     this.get("#/step2", function () {
         startDrawing();
         $("#containconvert").hide();
-        $("#originalBtn").hide();
+        $("#originalBtn").addClass("hidden");
         $("#canvas_layer").show();
         $("#userUploadedImage").hide();
         $("#stepInfo").text("Step 2: Mask your image.");
@@ -34,12 +34,14 @@ var app = Sammy(function () {
 
     this.get("#/step3", function () {
         $("#containconvert").show();
-        $("#originalBtn").show();
+        $("#originalBtn").removeClass("hidden");
         document.getElementById("convertBtn").disabled=true;
         startAttending();
         $("#stepInfo").text("Step 3: See initial inpainting result.\n If you want to modify the result, click modulate button.");
         $("#nextBtn").show();
+        $("#prevBtn").show();
         $("#toolBox").load("./pages/Step3Components.html");
+        $("#comparediv").width(img_width+100);
     });
 
     this.get("#/step4", function () {
@@ -50,7 +52,8 @@ var app = Sammy(function () {
         $("#toolBox").load("./pages/Step4Components.html");
         $("#nextBtn").hide();
         $("#prevBtn").hide();
-        $("#convertBtn").hide();
+        $("#containconvert").hide();
+        $("#comparediv").width(img_width+300);
     });
 
     this.get("#/param/:id", function () {

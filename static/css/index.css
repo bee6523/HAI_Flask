@@ -97,3 +97,10 @@
 	font-size: 1.2em;
 	overflow-wrap: break-word;
 }
+#comparediv {
+	position: relative;
+	width: 50%;
+	margin: auto;
+	padding-left: 5px;
+	text-align: left;
+}
