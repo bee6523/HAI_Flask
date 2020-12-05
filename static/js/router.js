@@ -13,6 +13,7 @@ var app = Sammy(function () {
         $("#stepInfo").text("Step 1: Upload your image.");
         $(".progress").show();
         if (!beenhere) $("#mainDiv").load("/pages/Upload.html");
+        $("#canvas_layer").hide();
         $("#userUploadedImage").show();
         $("#prevBtn").hide();
         $("#toolBox").hide();

@@ -530,6 +530,13 @@ function undodo_3(){
   }
 }
 
+function showOriginalImage(){
+  document.getElementById("img_layer").style.zIndex=10;
+}
+function hideOriginalImage(){
+  document.getElementById("img_layer").style.zIndex=0;
+}
+
 function palettesize() {
   var palette_width=img_width/3;
   var palette_height=img_height/3;
