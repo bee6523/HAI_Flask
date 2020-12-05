@@ -354,7 +354,7 @@ function doDraw(e){
         break;
       case "eraser_3":
         tmp_ctx.clearRect(prevX,prevY,currX-prevX,currY-prevY);
-        tmp_ctx.drawImage(att_layer,prevX,prevY,currX-prevX,currY-prevY,prevX,prevY,currX-prevX,currY-prevY);
+        tmp_ctx.drawImage(att_layer,0,0);
         currX=parseInt(cx/8)*8;
         currY=parseInt(cy/8)*8;
         tmp_ctx.globalCompositeOperation = "source-atop";
