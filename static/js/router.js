@@ -24,6 +24,7 @@ var app = Sammy(function () {
         startDrawing();
         $("#containconvert").hide();
         $("#originalBtn").addClass("hidden");
+        $("#initialBtn").addClass("hidden");
         $("#canvas_layer").show();
         $("#userUploadedImage").hide();
         $("#stepInfo").text("Step 2: Mask your image.");
@@ -35,6 +36,7 @@ var app = Sammy(function () {
     this.get("#/step3", function () {
         $("#containconvert").show();
         $("#originalBtn").removeClass("hidden");
+        $("#initialBtn").removeClass("hidden");
         document.getElementById("convertBtn").disabled=true;
         startAttending();
         $("#stepInfo").text("Step 3: See initial inpainting result.\n If you want to modify the result, click modulate button.");

@@ -11,7 +11,7 @@ var image_file, image, colorMap, loadImage,
   attendrX,attendrY,
   lineLx, lineLy,
   lineHx, lineHy,
-  att_img;
+  att_img, init_image, result_image;
 var showingResult=true; //true if displaying result, false if modulating phase
 var mask, attention;
 var tool="rect";
@@ -88,9 +88,9 @@ function startAttending(){
   att_layer.style.visibility="visible";
   if(change_flag == false){
     document.getElementById("convertBtn").disabled=false;
-    if(showingResult){
-      document.getElementById("result_layer").style.visibility="visible";
-    }
+    document.getElementById("result_layer").style.visibility="visible";
+    $('#convertBtn').html("Modulate");
+    showingResult=true;
     return;
   }else{
     att_ctx.clearRect(0,0,img_width,img_height);
@@ -152,6 +152,7 @@ function showResult(){
 
     document.getElementById("convertBtn").disabled=true;
     document.getElementById("originalBtn").disabled=true;
+    document.getElementById("initialBtn").disabled=true;
     $('#attendingGadgets').hide();
     $('#mapContainer').hide();
 
@@ -180,9 +181,9 @@ function callback_getAttention(response){
   console.log("success!")
   console.log(response);
   att_img=new Image();
-  var result_image= new Image();
-  result_image.addEventListener("load",(evt)=>{
-    result_ctx.drawImage(result_image,0,0,img_width,img_height);
+  init_image= new Image();
+  init_image.addEventListener("load",(evt)=>{
+    result_ctx.drawImage(init_image,0,0,img_width,img_height);
     change_flag=false;
     attUndoList=[];
     $('#convertBtn').html("Modulate");
@@ -197,14 +198,14 @@ function callback_getAttention(response){
     att_ctx.globalCompositeOperation="source-over";
   });
   paths=response.split('&');
-  result_image.src=paths[0]+ "?t=" + new Date().getTime();
+  init_image.src=paths[0]+ "?t=" + new Date().getTime();
   att_img.src=paths[1]+ "?t="+ new Date().getTime();
 }
 
 ///Callback function that is triggered when backend model created output image at step3 convert
 function callback_getResult(response){
   console.log(response);
-  var result_image = new Image();
+  result_image = new Image();
   result_image.addEventListener("load",(evt)=>{
     showingResult=true;
     change_flag=false;
@@ -212,6 +213,7 @@ function callback_getResult(response){
     $('#convertBtn').html("Modulate");
     document.getElementById("convertBtn").disabled=false;
     document.getElementById("originalBtn").disabled=false;
+    document.getElementById("initialBtn").disabled=false;
   });
   result_image.src=response + "?t=" + new Date().getTime();
 }
@@ -556,6 +558,15 @@ function showOriginalImage(){
 }
 function hideOriginalImage(){
   document.getElementById("img_layer").style.zIndex=0;
+}
+function showInitialImage(){
+  document.getElementById("result_layer").style.visibility="visible";
+  result_ctx.drawImage(init_image,0,0,img_width,img_height);
+}
+function hideInitialImage(){
+  if(!showingResult)
+    document.getElementById("result_layer").style.visibility="hidden";
+  result_ctx.drawImage(result_image,0,0,img_width,img_height);
 }
 
 function palettesize() {
