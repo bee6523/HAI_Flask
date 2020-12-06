@@ -292,7 +292,14 @@ function doDraw(e){
         prevY = currY;
         currX = cx;
         currY = cy;
-        drawLine();
+        tmp_ctx.beginPath();
+        tmp_ctx.moveTo(prevX, prevY);
+        tmp_ctx.lineTo(currX, currY);
+        tmp_ctx.strokeStyle = "white";
+        tmp_ctx.lineWidth = lineWidth;
+        tmp_ctx.lineCap = "round";
+        tmp_ctx.stroke();
+        tmp_ctx.closePath();
         break;
       case "rect":
         tmp_ctx.clearRect(prevX,prevY,currX-prevX,currY-prevY);
@@ -462,16 +469,7 @@ function endDraw(e){
     }
   }
 }
-function drawLine() {
-  tmp_ctx.beginPath();
-  tmp_ctx.moveTo(prevX, prevY);
-  tmp_ctx.lineTo(currX, currY);
-  tmp_ctx.strokeStyle = "white";
-  tmp_ctx.lineWidth = lineWidth;
-  tmp_ctx.lineCap = "round";
-  tmp_ctx.stroke();
-  tmp_ctx.closePath();
-}
+
 
 ///Function for Step 2 tool transition
 function recrec() {
@@ -574,99 +572,6 @@ function palettesize() {
   pal_ctx.drawImage(colorMap,0,0,palette_width,palette_height);
   reg_ctx = reg_layer.getContext("2d");
   reg_ctx.drawImage(cnv_layer,0,0,palette_width,palette_height);
-}
-
-function fillAttention(sx,sy){
-  var paletteCanvas=document.createElement("canvas");
-  var p_ctx=paletteCanvas.getContext("2d");
-  paletteCanvas.width=img_width;
-  paletteCanvas.height=img_height;
-  document.body.appendChild(paletteCanvas);
-
-  var imgData=cnv_ctx.getImageData(0,0,img_width,img_height);
-  var paletteData=p_ctx.getImageData(0,0,img_width,img_height);
-
-  var traverseData=new Array(img_width*img_height);
-  traverseData = traverseData.fill(0);
-
-  [paintlX,paintlY,paintrX,paintrY] = fillInpaintingArea(imgData.data,paletteData.data,sx,sy,traverseData);
-
-  p_ctx.putImageData(paletteData,0,0);
-  recWidth = paintrX-paintlX;
-  recHeight = paintrY-paintlY;
-  hratio = colorMap.height/img_height;
-  wratio = colorMap.width/img_width;
-  p_ctx.globalCompositeOperation = "source-atop";
-  p_ctx.drawImage(colorMap,attendlX*wratio,attendlY*hratio,(attendrX-attendlX)*wratio,(attendrY-attendlY)*hratio,paintlX,paintlY,recWidth,recHeight);
-  p_ctx.globalCompositeOperation = "source-over";
-
-  //att_ctx.globalCompositeOperation="destination-over";
-  att_ctx.drawImage(paletteCanvas,0,0);
-  
-  console.log("applyFill");
-}
-
-
-//three imgData should have same width/height.
-function fillInpaintingArea(maskData,attData,sx,sy, traverseData){
-  trav_queue=new Array();
-  index = computeIndex(sx,sy,img_width)
-  startX=sx;
-  startY=sy;
-  var paintlX=img_width,paintlY=img_height,paintrX=0,paintrY=0;
-  if(maskData[index+3]==0){ //if click point is not inpainting region
-    return;
-  }
-  trav_queue.push([sx,sy]);
-  while(trav_queue.length>0){
-    [sx,sy]=trav_queue.shift();
-    if(traverseData[computeIndex(sx,sy,img_width)/4]!=0){
-      continue;
-    }
-    for(lx=sx;lx>=0;lx--){
-      index=computeIndex(lx,sy,img_width);
-      if(maskData[index+3]==0){
-        break;
-      }
-    }
-    lx++;
-    for(rx=sx;rx<img_width;rx++){
-      index=computeIndex(rx,sy,img_width);
-      if(maskData[index+3]==0)
-        break;
-    }
-    rx--;
-
-    if(lx<paintlX) paintlX=lx;
-    if(rx>paintrX) paintrX=rx;
-    if(sy<paintlY) paintlY=sy;
-    if(sy>paintrY) paintrY=sy;
-
-    for(sx=lx;sx<=rx;sx++){
-      index=computeIndex(sx,sy,img_width);
-      traverseData[index/4]=1;  //mark as traversed
-
-      attData[index]=255;
-      attData[index+1]=255;
-      attData[index+2]=255;
-      attData[index+3]=255;
-
-      index=computeIndex(sx,sy+1,img_width);
-      if(maskData[index+3]!=0){
-        trav_queue.push([sx,sy+1]);
-      }
-      index=computeIndex(sx,sy-1,img_width);
-      if(maskData[index+3]!=0){
-        trav_queue.push([sx,sy-1]);
-      }
-    }
-  }
-
-  return [paintlX,paintlY,paintrX,paintrY];
-  
-}
-function computeIndex(sx,sy,swidth){
-  return (sx+sy*swidth)*4;
 }
 
 function downloadResultImage(el){
