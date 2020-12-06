@@ -88,6 +88,8 @@ function startAttending(){
   att_layer.style.visibility="visible";
   if(change_flag == false){
     document.getElementById("convertBtn").disabled=false;
+    document.getElementById("originalBtn").disabled=false;
+    document.getElementById("initialBtn").disabled=false;
     document.getElementById("result_layer").style.visibility="visible";
     $('#convertBtn').html("Modulate");
     showingResult=true;

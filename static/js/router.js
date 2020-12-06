@@ -25,6 +25,8 @@ var app = Sammy(function () {
         $("#containconvert").hide();
         $("#originalBtn").addClass("hidden");
         $("#initialBtn").addClass("hidden");
+        document.getElementById("originalBtn").disabled=true;
+        document.getElementById("initialBtn").disabled=true;
         $("#canvas_layer").show();
         $("#userUploadedImage").hide();
         $("#stepInfo").text("Step 2: Mask your image.");
